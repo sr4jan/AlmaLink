@@ -1,0 +1,311 @@
+.container {
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 2rem;
+    padding-top: 64px;
+  }
+  
+  .content {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  /* Header Styles */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .headerLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .welcomeText {
+    font-size: 2rem;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .currentTime {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  
+  .notificationButton {
+    position: relative;
+    padding: 0.75rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .notificationButton:hover {
+    background: var(--bg-secondary);
+    transform: translateY(-2px);
+  }
+  
+  .notificationBadge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Stats Grid */
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .statCard {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .statCard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow);
+  }
+  
+  .statIcon {
+    padding: 1rem;
+    background: var(--primary-transparent);
+    border-radius: 12px;
+    color: var(--primary);
+  }
+  
+  .statInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .statNumber {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  
+  .statLabel {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+  
+  /* Main Grid */
+  .mainGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+  }
+  
+  /* Actions Section */
+  .actionsSection {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+  }
+  
+  .actionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  .actionCard {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .actionCard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow);
+    background: var(--bg-secondary);
+  }
+  
+  .actionIcon {
+    padding: 0.75rem;
+    background: var(--primary-transparent);
+    border-radius: 12px;
+    color: var(--primary);
+  }
+  
+  .actionContent {
+    flex: 1;
+  }
+  
+  .actionTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+  }
+  
+  .actionDescription {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+  
+  /* Events Section */
+  .eventsSection {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2rem;
+  }
+  
+  .eventsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .eventCard {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .eventCard:hover {
+    transform: translateX(4px);
+    background: var(--bg-secondary);
+  }
+  
+  .eventIcon {
+    padding: 0.75rem;
+    border-radius: 10px;
+    color: var(--primary);
+  }
+  
+  .eventContent {
+    flex: 1;
+  }
+  
+  .eventTitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+  }
+  
+  .eventTime {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  
+  /* Event Types */
+  .workshop .eventIcon {
+    background: rgba(0, 198, 255, 0.1);
+  }
+  
+  .mentorship .eventIcon {
+    background: rgba(255, 123, 0, 0.1);
+    color: #ff7b00;
+  }
+  
+  .assessment .eventIcon {
+    background: rgba(255, 0, 128, 0.1);
+    color: #ff0080;
+  }
+  
+  /* Loading State */
+  .loadingContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+  }
+  
+  .loadingSpinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .mainGrid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .statsGrid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .actionsGrid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .welcomeText {
+      font-size: 1.5rem;
+    }
+  }

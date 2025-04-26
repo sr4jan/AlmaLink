@@ -1,0 +1,898 @@
+.container {
+  min-height: calc(100vh - 64px);
+  margin-top: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  padding: 20px;
+  font-family: "SF Pro", system-ui, -apple-system, sans-serif;
+}
+
+.card {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 600px;
+  max-height: 90vh;
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+}
+
+/* Brand Panel Styles */
+.brandPanel {
+  width: 50%;
+  background: var(--primary-gradient);
+  padding: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.brandPanelContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.brandInfo {
+  margin-bottom: 40px;
+}
+
+.brandTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.brandSubtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  position: relative;
+  z-index: 2;
+}
+
+/* Feature Styles */
+.featureContainer {
+  margin: 60px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  color: white;
+  transform: translateX(0);
+  transition: all 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateX(10px);
+}
+
+.featureIcon {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  backdrop-filter: blur(5px);
+}
+
+.featureText {
+  font-size: 16px;
+}
+
+/* Step Indicator */
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: auto;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.step.active {
+  color: white;
+}
+
+.step::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  margin-right: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.step.active::before {
+  background: white;
+  border-color: white;
+}
+
+.stepLine {
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  max-width: 60px;
+}
+
+/* Signup Panel */
+.signupPanel {
+  width: 50%;
+  padding: 40px;
+  background: var(--card-bg);
+  overflow-y: auto;
+  height: 100vh;
+  max-height: 100vh;
+}
+
+.signupPanel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.signupPanel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.signupPanel::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.signupTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.signupSubtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+/* Form Elements */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.input, .select {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input:focus, .select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-transparent);
+}
+
+.select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Skills Section */
+.skillsSection {
+  margin-top: 16px;
+}
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.skillChip {
+  padding: 8px 16px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  user-select: none;
+}
+
+.skillChip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.selectedSkill {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.selectedSkill:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.skillCategory {
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.skillCategoryTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.recommendedSkill {
+  border: 2px solid var(--primary);
+  position: relative;
+}
+
+.recommendedSkill::after {
+  content: '★';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.suggestedSkill {
+  border: 1px dashed var(--primary);
+}
+
+.skillSubCategory {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 8px 0;
+  font-weight: 500;
+}
+
+/* Buttons */
+.buttonGroup {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.backButton,
+.nextButton,
+.signupButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.backButton {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.backButton:hover {
+  background-color: var(--input-bg);
+}
+
+.nextButton,
+.signupButton {
+  background-color: var(--primary);
+  border: none;
+  color: white;
+}
+
+.nextButton:hover,
+.signupButton:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 24px;
+}
+
+.loginLink {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+}
+
+.loginLink:hover {
+  opacity: 0.8;
+}
+
+/* Utils */
+.errorMessage {
+  background-color: var(--overlay-light);
+  border: 1px solid var(--border-color);
+  color: var(--error-color);
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--overlay-light);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .brandPanel,
+  .signupPanel {
+    width: 100%;
+    height: auto;
+  }
+
+  .brandPanel {
+    padding: 30px;
+  }
+
+  .signupPanel {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .skillsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .brandPanel,
+  .signupPanel {
+    padding: 20px;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .backButton,
+  .nextButton,
+  .signupButton {
+    width: 100%;
+  }
+
+  .skillsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}
+/* First, update the container and card styles */
+.container {
+  min-height: 100vh; /* Remove the margin and calculation */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  padding: 20px;
+  font-family: "SF Pro", system-ui, -apple-system, sans-serif;
+}
+
+.card {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 600px; /* Add minimum height */
+  max-height: 90vh;
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+}
+
+/* Update the panel styles */
+.brandPanel {
+  width: 50%;
+  background: var(--primary-gradient);
+  padding: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  min-height: 100%;
+}
+
+.signupPanel {
+  width: 50%;
+  padding: 40px;
+  background: var(--card-bg);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+/* Update the form styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+  min-height: min-content; /* Ensure form takes minimum required height */
+}
+
+/* Update the button group styles */
+.buttonGroup {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  position: sticky;
+  bottom: 0;
+  background: var(--card-bg);
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Update footer styles */
+.footer {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: auto;
+  padding-top: 24px;
+  position: sticky;
+  bottom: 0;
+  background: var(--card-bg);
+}
+
+/* Update media queries */
+@media (max-width: 768px) {
+  .container {
+    padding: 0; /* Remove padding on mobile */
+  }
+
+  .card {
+    min-height: 100vh;
+    max-height: none;
+    border-radius: 0; /* Remove border radius on mobile */
+  }
+
+  .brandPanel,
+  .signupPanel {
+    width: 100%;
+    max-height: none;
+  }
+
+  .signupPanel {
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .buttonGroup {
+    position: relative;
+    margin-top: auto;
+  }
+}
+
+@media (max-height: 800px) {
+  .card {
+    min-height: 100vh;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .signupPanel {
+    max-height: none;
+    height: auto;
+  }
+}
+/* Update the button group styles */
+.buttonGroup {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  margin-bottom: 0px;
+  position: sticky;
+  bottom: 0;
+  background: var(--card-bg);
+  padding: 16px 0;
+  z-index: 10;
+  padding-bottom: 50px;
+}
+
+/* Add gradient overlay before the buttons */
+.buttonGroup::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(
+    to top,
+    var(--card-bg) 20%,
+    rgba(var(--card-bg-rgb), 0) 100%
+  );
+  pointer-events: none;
+}
+
+.backButton,
+.nextButton,
+.signupButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.backButton {
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.backButton:hover {
+  background-color: var(--border-color);
+}
+
+/* Update footer styles */
+.footer {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 24px 0;
+  padding-top: 0;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  background: var(--card-bg);
+  z-index: 9;
+}
+.signupPanel {
+  width: 50%;
+  padding: 40px;
+  background: var(--card-bg);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  position: relative;
+}
+
+/* Add a container for the form content */
+.formContent {
+  flex: 1;
+  margin-bottom: 15px; /* Add space for the sticky buttons */
+}
+
+@media (max-width: 768px) {
+  .buttonGroup::before {
+    opacity: 0.9; /* Increase gradient opacity on mobile */
+  }
+  
+  .footer {
+    padding: 20px 0;
+  }
+}
+/* Skills Search Section */
+.searchWrapper {
+  position: relative;
+  margin-bottom: 24px;
+  margin-top: 16px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.searchInput:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-transparent);
+}
+
+.skillsCount {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  text-align: right;
+  padding: 8px 12px;
+  background-color: var(--input-bg);
+  border-radius: 8px;
+  display: inline-block;
+  float: right;
+  border: 1px solid var(--border-color);
+}
+
+/* Skills Grid Layout */
+.skillsSection {
+  position: relative;
+  padding-bottom: 80px; /* Space for sticky button group */
+}
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Skill Chips */
+.skillChip {
+  padding: 8px 16px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+}
+
+.skillChip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.selectedSkill {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.selectedSkill:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: white;
+}
+
+/* Category Styling */
+.skillCategory {
+  margin-top: 32px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.skillCategoryTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Recommended and Suggested Skills */
+.recommendedSkill {
+  border: 2px solid var(--primary);
+  position: relative;
+  background-color: var(--primary-transparent);
+}
+
+.recommendedSkill::after {
+  content: '★';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.suggestedSkill {
+  border: 1px dashed var(--primary);
+}
+
+/* No Results Message */
+.noResults {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 24px;
+  background-color: var(--input-bg);
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .skillsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .skillChip {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .searchInput {
+    font-size: 14px;
+    padding: 10px 10px 10px 36px;
+  }
+
+  .searchIcon {
+    left: 10px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skillsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .skillsCount {
+    width: 100%;
+    text-align: center;
+    float: none;
+    margin-bottom: 16px;
+  }
+}
+
+/* Animations */
+@keyframes skillPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.skillChip.selectedSkill {
+  animation: skillPop 0.3s ease;
+}
+
+/* Dark Mode Enhancements */
+[data-theme='dark'] .skillChip {
+  background-color: var(--input-bg-dark);
+}
+
+[data-theme='dark'] .recommendedSkill {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme='dark'] .searchInput::placeholder {
+  color: var(--text-secondary-dark);
+}

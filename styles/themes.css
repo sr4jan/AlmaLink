@@ -1,0 +1,177 @@
+/* ==========================================================================
+   Color & Theme Variables
+   ========================================================================== */
+
+   :root {
+    /* -----------------------------
+     * Core Palette & Accents (Light Mode)
+     * ----------------------------- */
+    /* Primary Color (Apple Blue inspired) */
+    --primary: #007aff;
+    --primary-hover: #005ecb; /* Darker shade for hover */
+    --primary-active: #004aaa; /* Even darker for active/pressed */
+    --primary-gradient: linear-gradient(90deg, #0a84ff, #007aff); /* Optional gradient */
+    --primary-transparent: rgba(0, 122, 255, 0.1); /* For subtle backgrounds/highlights */
+    --primary-shadow-color: rgba(0, 122, 255, 0.25); /* For focus rings, shadows */
+  
+    /* Accent Colors */
+    --success: #34c759; /* Apple Green */
+    --error: #ff3b30;   /* Apple Red */
+    --warning: #ff9500; /* Apple Orange */
+    --info: #007aff;    /* Can reuse primary or use a different blue */
+  
+    /* -----------------------------
+     * Backgrounds (Light Mode)
+     * ----------------------------- */
+    --bg-primary: #ffffff;         /* Main background (e.g., page body) */
+    --bg-secondary: #f2f2f7;       /* Slightly off-white (e.g., sidebars, headers) */
+    --bg-tertiary: #e5e5ea;        /* Gray for dividers, inactive elements */
+    --bg-elevated: #ffffff;        /* Background for cards, modals (often same as primary) */
+    --bg-overlay: rgba(0, 0, 0, 0.1); /* Subtle dark overlay */
+    --bg-backdrop: rgba(255, 255, 255, 0.8); /* For frosted glass effects */
+    --bg-input: #f2f2f7;           /* Background for input fields */
+    --bg-nav: rgba(255, 255, 255, 0.9); /* Semi-transparent nav */
+  
+    /* -----------------------------
+     * Text Colors (Light Mode)
+     * ----------------------------- */
+    --text-primary: #1c1c1e;       /* Main text (near black) */
+    --text-secondary: #636366;     /* Secondary text (dark gray) */
+    --text-tertiary: #8e8e93;      /* Tertiary text (medium gray) */
+    --text-placeholder: #aeaeb2;   /* Placeholder text */
+    --text-link: var(--primary);   /* Link color */
+    --text-link-hover: var(--primary-hover);
+    --text-on-primary: #ffffff;    /* Text on primary background (e.g., buttons) */
+    --text-on-accent: #ffffff;     /* Text on success/error/warning backgrounds */
+    --text-error: var(--error);    /* Error text color */
+  
+    /* -----------------------------
+     * Borders & Dividers (Light Mode)
+     * ----------------------------- */
+    --border-color: #d1d1d6;       /* Default border */
+    --divider-color: #e5e5ea;     /* Line dividers */
+    --focus-ring-color: var(--primary-shadow-color);
+  
+    /* -----------------------------
+     * Shadows (Light Mode)
+     * ----------------------------- */
+    --shadow-color-base: rgba(0, 0, 0, 0.1); /* Base color for shadows */
+    --shadow-sm: 0 1px 2px 0 var(--shadow-color-base);
+    --shadow-md: 0 3px 6px -1px var(--shadow-color-base), 0 2px 4px -2px var(--shadow-color-base);
+    --shadow-lg: 0 10px 15px -3px var(--shadow-color-base), 0 4px 6px -4px var(--shadow-color-base);
+    --shadow-inner: inset 0 2px 4px 0 var(--shadow-color-base);
+  
+    /* -----------------------------
+     * Sizing & Radius
+     * ----------------------------- */
+    --navbar-height: 64px;
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 16px; /* Often used for chat bubbles */
+    --border-radius-xl: 24px;
+    --border-radius-full: 999px; /* For pills, round buttons */
+    --transition-speed: 0.2s;
+  
+    /* -----------------------------
+     * Component Specific (Light Mode) - Examples
+     * ----------------------------- */
+    /* Chat Bubbles */
+    --sent-bubble-bg: var(--primary);
+    --sent-bubble-text: var(--text-on-primary);
+    --received-bubble-bg: var(--bg-tertiary);
+    --received-bubble-text: var(--text-primary);
+  
+    /* Indicators */
+    --online-indicator: var(--success);
+  
+    /* Footer Example */
+    --footer-bg: var(--text-primary);
+    --footer-text: var(--bg-primary);
+    --footer-link: var(--text-secondary);
+    --footer-link-hover: var(--text-primary);
+  }
+  
+  
+  /* ==========================================================================
+     Dark Mode Overrides
+     ========================================================================== */
+  
+  :root[data-theme="dark"] {
+    /* -----------------------------
+     * Core Palette & Accents (Dark Mode)
+     * ----------------------------- */
+    --primary: #0a84ff; /* Brighter Apple Blue */
+    --primary-hover: #409cff;
+    --primary-active: #69b4ff;
+    --primary-gradient: linear-gradient(90deg, #0a84ff, #007aff);
+    --primary-transparent: rgba(10, 132, 255, 0.15);
+    --primary-shadow-color: rgba(10, 132, 255, 0.4);
+  
+    --success: #30d158; /* Brighter Apple Green */
+    --error: #ff453a;   /* Brighter Apple Red */
+    --warning: #ff9f0a; /* Brighter Apple Orange */
+    --info: var(--primary);
+  
+    /* -----------------------------
+     * Backgrounds (Dark Mode)
+     * ----------------------------- */
+    --bg-primary: #000000;         /* True black or near-black */
+    --bg-secondary: #1c1c1e;       /* Dark gray */
+    --bg-tertiary: #2c2c2e;        /* Medium dark gray */
+    --bg-elevated: #1c1c1e;        /* Elevated surfaces */
+    --bg-overlay: rgba(0, 0, 0, 0.3); /* Darker overlay */
+    --bg-backdrop: rgba(30, 30, 30, 0.8); /* Dark frosted glass */
+    --bg-input: #2c2c2e;           /* Input background */
+    --bg-nav: rgba(20, 20, 22, 0.9); /* Dark semi-transparent nav */
+  
+    /* -----------------------------
+     * Text Colors (Dark Mode)
+     * ----------------------------- */
+    --text-primary: #ffffff;       /* Main text (white) */
+    --text-secondary: #aeaeb2;     /* Secondary text (light gray) */
+    --text-tertiary: #8e8e93;      /* Tertiary text (medium gray) */
+    --text-placeholder: #636366;   /* Darker placeholder */
+    --text-link: var(--primary);
+    --text-link-hover: var(--primary-hover);
+    --text-on-primary: #ffffff;    /* Usually white, check contrast */
+    --text-on-accent: #ffffff;
+    --text-error: var(--error);
+  
+    /* -----------------------------
+     * Borders & Dividers (Dark Mode)
+     * ----------------------------- */
+    --border-color: #38383a;       /* Lighter gray border */
+    --divider-color: #3a3a3c;
+    --focus-ring-color: var(--primary-shadow-color);
+  
+    /* -----------------------------
+     * Shadows (Dark Mode)
+     * ----------------------------- */
+    /* Shadows are less prominent on dark backgrounds, often rely on borders/bg differences */
+    /* Or use a very subtle light source effect if desired */
+    --shadow-color-base: rgba(0, 0, 0, 0.5); /* Darker base for stronger shadows if needed */
+    --shadow-sm: 0 1px 2px 0 var(--shadow-color-base);
+    --shadow-md: 0 4px 8px 0 var(--shadow-color-base);
+    --shadow-lg: 0 10px 20px 0 var(--shadow-color-base);
+    --shadow-inner: inset 0 2px 4px 0 var(--shadow-color-base);
+  
+    /* -----------------------------
+     * Component Specific (Dark Mode) - Examples
+     * ----------------------------- */
+    /* Chat Bubbles */
+    --sent-bubble-bg: var(--primary);
+    --sent-bubble-text: var(--text-on-primary);
+    --received-bubble-bg: var(--bg-tertiary);
+    --received-bubble-text: var(--text-primary);
+  
+    /* Indicators */
+    --online-indicator: var(--success);
+  
+    /* Footer Example */
+    --footer-bg: #08080f; /* Very dark */
+    --footer-text: var(--text-secondary);
+    --footer-link: var(--text-tertiary);
+    --footer-link-hover: var(--text-primary);
+  }
+
+  

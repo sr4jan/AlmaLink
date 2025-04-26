@@ -1,0 +1,328 @@
+.container {
+    min-height: calc(100vh - 64px);
+    margin-top: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    padding: 20px;
+    font-family: "SF Pro", system-ui, -apple-system, sans-serif;
+  }
+  
+  .card {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+  }
+  
+  .brandPanel {
+    width: 50%;
+    background: var(--primary-gradient);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .brandTitle {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .brandSubtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .featureContainer {
+    margin-top: 60px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .feature {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+  }
+  
+  .feature:hover {
+    transform: translateX(10px);
+  }
+  
+  .featureIcon {
+    background: var(--overlay-light);
+    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+  }
+  
+  .feature:hover .featureIcon {
+    background: var(--overlay-light);
+  }
+  
+  .featureText {
+    font-size: 16px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  
+  .loginPanel {
+    width: 50%;
+    padding: 40px;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .loginTitle {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  
+  .loginSubtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .inputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .inputWrapper {
+    position: relative;
+  }
+  
+  .inputIcon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+  }
+  
+  .input:focus + .inputIcon {
+    color: var(--primary);
+  }
+  
+  .input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+  .input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-transparent);
+  }
+  
+  .label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  
+  .passwordToggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+    transition: color 0.3s ease;
+  }
+  
+  .passwordToggle:hover {
+    color: var(--text-primary);
+  }
+  
+  .forgotPassword {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 4px;
+  }
+  
+  .forgotLink {
+    font-size: 14px;
+    color: var(--primary);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .forgotLink:hover {
+    opacity: 0.8;
+  }
+  
+  .loginButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    gap: 8px;
+  }
+  
+  .loginButton:not(:disabled):hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+  }
+  
+  .loginButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+  }
+  
+  .dividerLine {
+    flex: 1;
+    height: 1px;
+    background-color: var(--border-color);
+  }
+  
+  .dividerText {
+    margin: 0 16px;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  
+  .socialButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    gap: 8px;
+  }
+  
+  .socialButton:hover {
+    background-color: var(--bg-secondary);
+  }
+  
+  .footer {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 24px;
+  }
+  
+  .signupLink {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+  }
+  
+  .signupLink:hover {
+    opacity: 0.8;
+  }
+  
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--overlay-light);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @media (max-width: 768px) {
+    .card {
+      flex-direction: column;
+      max-width: 500px;
+    }
+  
+    .brandPanel,
+    .loginPanel {
+      width: 100%;
+    }
+  
+    .brandPanel {
+      padding: 30px;
+    }
+  
+    .featureContainer {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .brandPanel,
+    .loginPanel {
+      padding: 20px;
+    }
+  }

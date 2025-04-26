@@ -1,0 +1,47 @@
+.themeToggle {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .iconWrapper {
+    position: relative;
+    width: 18px;
+    height: 18px;
+  }
+  
+  .icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+  }
+  
+  .sunIcon {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 0;
+  }
+  
+  .moonIcon {
+    transform: translateY(20px) rotate(0deg);
+    opacity: 0;
+  }
+  
+  .active {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  
+  .themeToggle:hover .active {
+    transform: rotate(12deg);
+  }

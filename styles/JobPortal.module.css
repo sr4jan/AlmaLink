@@ -1,0 +1,421 @@
+.container {
+    min-height: calc(100vh - 64px); /* Adjust this value based on your navbar height */
+    padding: 2rem;
+    padding-top: 7rem; /* Increase top padding to account for navbar */
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: "SF Pro", system-ui, -apple-system, sans-serif;
+    background: #0f0f23;
+    color: white;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 1;
+  }
+  .contentWrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+  .title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
+  .searchBar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .searchIcon {
+    color: rgba(255, 255, 255, 0.4);
+    margin-left: 1rem;
+  }
+  
+  .searchInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0.75rem;
+    color: white;
+    font-size: 1rem;
+  }
+  
+  .searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .filterButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .filterButton:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+  .main {
+    margin-top: 2rem;
+  }
+  
+  .actionBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .postButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .postButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 198, 255, 0.3);
+  }
+  
+  .jobForm {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+  }
+  
+  .formTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: white;
+  }
+  
+  .formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 1.5rem;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .inputWrapper {
+    position: relative;
+  }
+  
+  .inputIcon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .formGroup input,
+  .formGroup select,
+  .formGroup textarea {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+  }
+  
+  .formGroup textarea {
+    padding: 1rem;
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .formGroup input:focus,
+  .formGroup select:focus,
+  .formGroup textarea:focus {
+    outline: none;
+    border-color: rgba(0, 198, 255, 0.5);
+    box-shadow: 0 0 0 2px rgba(0, 198, 255, 0.2);
+  }
+  
+  .formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .cancelButton,
+  .submitButton {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .cancelButton {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+  }
+  
+  .submitButton {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .submitButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 198, 255, 0.3);
+  }
+  
+  .jobsList {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .jobCard {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s ease;
+  }
+  
+  .jobCard:hover {
+    transform: translateY(-2px);
+  }
+  
+  .jobHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  
+  .jobTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .jobActions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .deleteButton {
+    background: rgba(220, 53, 69, 0.1);
+    border: none;
+    padding: 0.5rem;
+    border-radius: 8px;
+    color: #dc3545;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .deleteButton:hover {
+    background: rgba(220, 53, 69, 0.2);
+  }
+  
+  .jobMeta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .company,
+  .location,
+  .jobType {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+  }
+  
+  .salary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #00c6ff;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .jobDescription {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+  
+  .requirements {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .requirements h4 {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+  }
+  
+  .requirements p {
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+  }
+  
+  .jobFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .applyButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .applyButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 198, 255, 0.3);
+  }
+  
+  .postedDate {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+  }
+  
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .empty {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .empty svg {
+    opacity: 0.6;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    .title {
+      font-size: 2rem;
+    }
+  
+    .formGrid {
+      grid-template-columns: 1fr;
+    }
+  
+    .jobMeta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  
+    .jobFooter {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+  
+    .postedDate {
+      text-align: center;
+    }
+  }

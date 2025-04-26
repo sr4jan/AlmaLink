@@ -1,0 +1,297 @@
+.container {
+    min-height: 100vh;
+    background: #0f0f23;
+    color: white;
+    padding-top: 64px;
+  }
+  
+  .hero {
+    background: linear-gradient(rgba(15, 15, 35, 0.9), rgba(15, 15, 35, 0.9)),
+                url('/hero-bg.jpg') center/cover;
+    padding: 6rem 2rem;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .tableOfContents {
+    position: sticky;
+    top: 64px;
+    background: rgba(15, 15, 35, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10;
+  }
+  
+  .tableOfContents a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+  
+  .tableOfContents a:hover {
+    color: #00c6ff;
+  }
+  
+  .content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .section {
+    margin-bottom: 4rem;
+  }
+  
+  .section h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .featuresGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .featureCard {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .featureCard:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0, 198, 255, 0.3);
+  }
+  
+  .featureCard h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #00c6ff;
+  }
+  
+  .techStack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+  }
+  
+  .techItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .techItem img {
+    width: 48px;
+    height: 48px;
+    transition: transform 0.3s ease;
+  }
+  
+  .techItem:hover img {
+    transform: translateY(-5px);
+  }
+  
+  .developerProfile {
+    display: flex;
+    gap: 2rem;
+    align-items: start;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+  
+  .profileImage {
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
+    object-fit: cover;
+  }
+  
+  .developerInfo {
+    flex: 1;
+  }
+  
+  .developerInfo h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #00c6ff;
+  }
+  
+  .developerTitle {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1rem;
+  }
+  
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  
+  .skills span {
+    background: rgba(0, 198, 255, 0.1);
+    color: #00c6ff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.9rem;
+  }
+  
+  .socialLinks {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .socialLinks a {
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.3s ease;
+  }
+  
+  .socialLinks a:hover {
+    color: #00c6ff;
+  }
+  
+  .visionGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .visionCard {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .visionCard:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0, 198, 255, 0.3);
+  }
+  
+  .visionCard h3 {
+    color: #00c6ff;
+    margin-bottom: 1rem;
+  }
+  
+  .cta {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(rgba(15, 15, 35, 0.9), rgba(15, 15, 35, 0.9)),
+                url('/cta-bg.jpg') center/cover;
+    border-radius: 16px;
+    margin-top: 4rem;
+  }
+  
+  .ctaButtons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  
+  .primaryButton {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .primaryButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 198, 255, 0.3);
+  }
+  
+  .secondaryButton {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .secondaryButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  @media (max-width: 768px) {
+    .hero {
+      padding: 4rem 1rem;
+    }
+  
+    .title {
+      font-size: 2.5rem;
+    }
+  
+    .tableOfContents {
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding: 1rem;
+    }
+  
+    .content {
+      padding: 1rem;
+    }
+  
+    .developerProfile {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .socialLinks {
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .title {
+      font-size: 2rem;
+    }
+  
+    .subtitle {
+      font-size: 1rem;
+    }
+  
+    .section h2 {
+      font-size: 1.5rem;
+    }
+  }
