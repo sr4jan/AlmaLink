@@ -25,6 +25,20 @@ import styles from './ProfileSidebar.module.css';
 export default function ProfileSidebar({ isOpen, onClose, theme, toggleTheme, session }) {
   const sidebarRef = useRef(null);
   const [visible, setVisible] = useState(isOpen);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    try {
+      setIsSigningOut(true);
+      await signOut({ 
+        callbackUrl: '/',
+        redirect: true
+      });
+    } catch (error) {
+      console.error('Sign out failed:', error);
+      setIsSigningOut(false);
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -246,14 +260,19 @@ export default function ProfileSidebar({ isOpen, onClose, theme, toggleTheme, se
 
         {/* Footer */}
         <div className={styles.modalFooter}>
-          <button 
-            className={styles.signOutButton}
-            onClick={() => signOut()}
-          >
-            <LogOut size={16} />
-            <span>Sign out</span>
-          </button>
-        </div>
+    <button 
+      className={`${styles.signOutButton} ${isSigningOut ? styles.loading : ''}`}
+      onClick={handleSignOut}
+      disabled={isSigningOut}
+    >
+      {isSigningOut ? (
+        <span className={styles.loadingSpinner} />
+      ) : (
+        <LogOut size={16} />
+      )}
+      <span>{isSigningOut ? 'Signing out...' : 'Sign out'}</span>
+    </button>
+  </div>
       </div>
     </div>
   );

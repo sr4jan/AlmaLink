@@ -1,177 +1,255 @@
-/* ==========================================================================
-   Color & Theme Variables
-   ========================================================================== */
-
-   :root {
-    /* -----------------------------
-     * Core Palette & Accents (Light Mode)
-     * ----------------------------- */
-    /* Primary Color (Apple Blue inspired) */
-    --primary: #007aff;
-    --primary-hover: #005ecb; /* Darker shade for hover */
-    --primary-active: #004aaa; /* Even darker for active/pressed */
-    --primary-gradient: linear-gradient(90deg, #0a84ff, #007aff); /* Optional gradient */
-    --primary-transparent: rgba(0, 122, 255, 0.1); /* For subtle backgrounds/highlights */
-    --primary-shadow-color: rgba(0, 122, 255, 0.25); /* For focus rings, shadows */
-  
-    /* Accent Colors */
-    --success: #34c759; /* Apple Green */
-    --error: #ff3b30;   /* Apple Red */
-    --warning: #ff9500; /* Apple Orange */
-    --info: #007aff;    /* Can reuse primary or use a different blue */
-  
-    /* -----------------------------
-     * Backgrounds (Light Mode)
-     * ----------------------------- */
-    --bg-primary: #ffffff;         /* Main background (e.g., page body) */
-    --bg-secondary: #f2f2f7;       /* Slightly off-white (e.g., sidebars, headers) */
-    --bg-tertiary: #e5e5ea;        /* Gray for dividers, inactive elements */
-    --bg-elevated: #ffffff;        /* Background for cards, modals (often same as primary) */
-    --bg-overlay: rgba(0, 0, 0, 0.1); /* Subtle dark overlay */
-    --bg-backdrop: rgba(255, 255, 255, 0.8); /* For frosted glass effects */
-    --bg-input: #f2f2f7;           /* Background for input fields */
-    --bg-nav: rgba(255, 255, 255, 0.9); /* Semi-transparent nav */
-  
-    /* -----------------------------
-     * Text Colors (Light Mode)
-     * ----------------------------- */
-    --text-primary: #1c1c1e;       /* Main text (near black) */
-    --text-secondary: #636366;     /* Secondary text (dark gray) */
-    --text-tertiary: #8e8e93;      /* Tertiary text (medium gray) */
-    --text-placeholder: #aeaeb2;   /* Placeholder text */
-    --text-link: var(--primary);   /* Link color */
-    --text-link-hover: var(--primary-hover);
-    --text-on-primary: #ffffff;    /* Text on primary background (e.g., buttons) */
-    --text-on-accent: #ffffff;     /* Text on success/error/warning backgrounds */
-    --text-error: var(--error);    /* Error text color */
-  
-    /* -----------------------------
-     * Borders & Dividers (Light Mode)
-     * ----------------------------- */
-    --border-color: #d1d1d6;       /* Default border */
-    --divider-color: #e5e5ea;     /* Line dividers */
-    --focus-ring-color: var(--primary-shadow-color);
-  
-    /* -----------------------------
-     * Shadows (Light Mode)
-     * ----------------------------- */
-    --shadow-color-base: rgba(0, 0, 0, 0.1); /* Base color for shadows */
-    --shadow-sm: 0 1px 2px 0 var(--shadow-color-base);
-    --shadow-md: 0 3px 6px -1px var(--shadow-color-base), 0 2px 4px -2px var(--shadow-color-base);
-    --shadow-lg: 0 10px 15px -3px var(--shadow-color-base), 0 4px 6px -4px var(--shadow-color-base);
-    --shadow-inner: inset 0 2px 4px 0 var(--shadow-color-base);
-  
-    /* -----------------------------
-     * Sizing & Radius
-     * ----------------------------- */
-    --navbar-height: 64px;
-    --border-radius-sm: 4px;
-    --border-radius-md: 8px;
-    --border-radius-lg: 16px; /* Often used for chat bubbles */
-    --border-radius-xl: 24px;
-    --border-radius-full: 999px; /* For pills, round buttons */
-    --transition-speed: 0.2s;
-  
-    /* -----------------------------
-     * Component Specific (Light Mode) - Examples
-     * ----------------------------- */
-    /* Chat Bubbles */
-    --sent-bubble-bg: var(--primary);
-    --sent-bubble-text: var(--text-on-primary);
-    --received-bubble-bg: var(--bg-tertiary);
-    --received-bubble-text: var(--text-primary);
-  
-    /* Indicators */
-    --online-indicator: var(--success);
-  
-    /* Footer Example */
-    --footer-bg: var(--text-primary);
-    --footer-text: var(--bg-primary);
-    --footer-link: var(--text-secondary);
-    --footer-link-hover: var(--text-primary);
-  }
-  
-  
+:root {
   /* ==========================================================================
-     Dark Mode Overrides
+     Core Brand Colors & Gradients
      ========================================================================== */
   
-  :root[data-theme="dark"] {
-    /* -----------------------------
-     * Core Palette & Accents (Dark Mode)
-     * ----------------------------- */
-    --primary: #0a84ff; /* Brighter Apple Blue */
-    --primary-hover: #409cff;
-    --primary-active: #69b4ff;
-    --primary-gradient: linear-gradient(90deg, #0a84ff, #007aff);
-    --primary-transparent: rgba(10, 132, 255, 0.15);
-    --primary-shadow-color: rgba(10, 132, 255, 0.4);
-  
-    --success: #30d158; /* Brighter Apple Green */
-    --error: #ff453a;   /* Brighter Apple Red */
-    --warning: #ff9f0a; /* Brighter Apple Orange */
-    --info: var(--primary);
-  
-    /* -----------------------------
-     * Backgrounds (Dark Mode)
-     * ----------------------------- */
-    --bg-primary: #000000;         /* True black or near-black */
-    --bg-secondary: #1c1c1e;       /* Dark gray */
-    --bg-tertiary: #2c2c2e;        /* Medium dark gray */
-    --bg-elevated: #1c1c1e;        /* Elevated surfaces */
-    --bg-overlay: rgba(0, 0, 0, 0.3); /* Darker overlay */
-    --bg-backdrop: rgba(30, 30, 30, 0.8); /* Dark frosted glass */
-    --bg-input: #2c2c2e;           /* Input background */
-    --bg-nav: rgba(20, 20, 22, 0.9); /* Dark semi-transparent nav */
-  
-    /* -----------------------------
-     * Text Colors (Dark Mode)
-     * ----------------------------- */
-    --text-primary: #ffffff;       /* Main text (white) */
-    --text-secondary: #aeaeb2;     /* Secondary text (light gray) */
-    --text-tertiary: #8e8e93;      /* Tertiary text (medium gray) */
-    --text-placeholder: #636366;   /* Darker placeholder */
-    --text-link: var(--primary);
-    --text-link-hover: var(--primary-hover);
-    --text-on-primary: #ffffff;    /* Usually white, check contrast */
-    --text-on-accent: #ffffff;
-    --text-error: var(--error);
-  
-    /* -----------------------------
-     * Borders & Dividers (Dark Mode)
-     * ----------------------------- */
-    --border-color: #38383a;       /* Lighter gray border */
-    --divider-color: #3a3a3c;
-    --focus-ring-color: var(--primary-shadow-color);
-  
-    /* -----------------------------
-     * Shadows (Dark Mode)
-     * ----------------------------- */
-    /* Shadows are less prominent on dark backgrounds, often rely on borders/bg differences */
-    /* Or use a very subtle light source effect if desired */
-    --shadow-color-base: rgba(0, 0, 0, 0.5); /* Darker base for stronger shadows if needed */
-    --shadow-sm: 0 1px 2px 0 var(--shadow-color-base);
-    --shadow-md: 0 4px 8px 0 var(--shadow-color-base);
-    --shadow-lg: 0 10px 20px 0 var(--shadow-color-base);
-    --shadow-inner: inset 0 2px 4px 0 var(--shadow-color-base);
-  
-    /* -----------------------------
-     * Component Specific (Dark Mode) - Examples
-     * ----------------------------- */
-    /* Chat Bubbles */
-    --sent-bubble-bg: var(--primary);
-    --sent-bubble-text: var(--text-on-primary);
-    --received-bubble-bg: var(--bg-tertiary);
-    --received-bubble-text: var(--text-primary);
-  
-    /* Indicators */
-    --online-indicator: var(--success);
-  
-    /* Footer Example */
-    --footer-bg: #08080f; /* Very dark */
-    --footer-text: var(--text-secondary);
-    --footer-link: var(--text-tertiary);
-    --footer-link-hover: var(--text-primary);
-  }
+  /* Primary Colors */
+  --primary-50: #e6f3ff;
+  --primary-100: #b3d9ff;
+  --primary-200: #80bfff;
+  --primary-300: #4da6ff;
+  --primary-400: #1a8cff;
+  --primary-500: #0062cc; /* Base Primary */
+  --primary-600: #0052ac;
+  --primary-700: #004190;
+  --primary-800: #003166;
+  --primary-900: #002147;
 
+  /* Success Colors */
+  --success-50: #e6f7ef;
+  --success-100: #b3e6d1;
+  --success-200: #80d4b3;
+  --success-300: #4dc395;
+  --success-400: #1ab177;
+  --success-500: #2e8b57; /* Base Success */
+  --success-600: #267549;
+  --success-700: #1e5e3b;
+  --success-800: #15472c;
+  --success-900: #0d301e;
+
+  /* Error Colors */
+  --error-50: #fee7e9;
+  --error-100: #fbb3b9;
+  --error-200: #f88089;
+  --error-300: #f54d59;
+  --error-400: #f21a29;
+  --error-500: #dc3545; /* Base Error */
+  --error-600: #ba2d3a;
+  --error-700: #97242f;
+  --error-800: #751c24;
+  --error-900: #52131919;
+
+  /* Warning Colors */
+  --warning-50: #fff3e6;
+  --warning-100: #ffdbb3;
+  --warning-200: #ffc380;
+  --warning-300: #ffab4d;
+  --warning-400: #ff931a;
+  --warning-500: #f59e0b; /* Base Warning */
+  --warning-600: #cc8409;
+  --warning-700: #a36a07;
+  --warning-800: #7a5005;
+  --warning-900: #523604;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--primary-500), var(--primary-400));
+  --gradient-success: linear-gradient(135deg, var(--success-500), var(--success-400));
+  --gradient-error: linear-gradient(135deg, var(--error-500), var(--error-400));
+  --gradient-warning: linear-gradient(135deg, var(--warning-500), var(--warning-400));
   
+  --gradient-blue-purple: linear-gradient(135deg, #0062cc, #7c3aed);
+  --gradient-green-blue: linear-gradient(135deg, #2e8b57, #0062cc);
+  --gradient-orange-pink: linear-gradient(135deg, #f59e0b, #ec4899);
+  --gradient-blue-cyan: linear-gradient(135deg, #0062cc, #06b6d4);
+
+  /* Shadows with Color Overlays */
+  --shadow-primary: 0 4px 14px 0 rgba(0, 98, 204, 0.25);
+  --shadow-success: 0 4px 14px 0 rgba(46, 139, 87, 0.25);
+  --shadow-error: 0 4px 14px 0 rgba(220, 53, 69, 0.25);
+  --shadow-warning: 0 4px 14px 0 rgba(245, 158, 11, 0.25);
+
+  /* Glass Effect Variables */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shine: rgba(255, 255, 255, 0.15);
+
+  /* Animation Durations */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+
+  /* Animation Curves */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Spacing Scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Z-Index Scale */
+  --z-negative: -1;
+  --z-elevate: 1;
+  --z-sticky: 100;
+  --z-drawer: 200;
+  --z-modal: 300;
+  --z-popover: 400;
+  --z-toast: 500;
+}
+
+/* Modern UI Component Classes */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: var(--glass-shine);
+  transform: translateY(-100%);
+  transition: transform 0.5s var(--ease-out);
+}
+
+.glass-card:hover::before {
+  transform: translateY(100%);
+}
+
+/* Modern Button Styles */
+.btn {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: all var(--duration-normal) var(--ease-out);
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-success {
+  background: var(--gradient-success);
+  color: white;
+  box-shadow: var(--shadow-success);
+}
+
+.btn-gradient {
+  background: var(--gradient-blue-purple);
+  color: white;
+  box-shadow: 0 4px 14px 0 rgba(124, 58, 237, 0.25);
+}
+
+/* Modern Input Styles */
+.input-modern {
+  background: var(--bg-input);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 0.75rem 1rem;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.input-modern:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+/* Badges */
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--border-radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.badge-primary {
+  background: var(--primary-100);
+  color: var(--primary-700);
+}
+
+.badge-success {
+  background: var(--success-100);
+  color: var(--success-700);
+}
+
+/* Cards */
+.card-modern {
+  background: var(--bg-elevated);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-6);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.card-modern:hover {
+  transform: translateY(-4px);
+}
+
+/* Icons */
+.icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.icon-button:hover {
+  background: var(--primary-50);
+  color: var(--primary-500);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  animation: fadeIn var(--duration-normal) var(--ease-out);
+}
+
+.animate-slide-up {
+  animation: slideUp var(--duration-normal) var(--ease-out);
+}
+
+.animate-pulse {
+  animation: pulse 2s var(--ease-in-out) infinite;
+}
+
+/* Add timestamp comment */
+/* Last updated: 2025-04-28 23:15:50 UTC */
+/* Updated by: sr4jan */

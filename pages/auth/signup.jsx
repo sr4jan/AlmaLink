@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import { skillsData } from "@/data/skills";
+import ResumeUploader from '@/components/ResumeUploader';
 import { 
   User, 
   Mail, 
@@ -95,6 +96,100 @@ export default function Signup() {
   const allMajors = Object.entries(majors).reduce((acc, [category, majors]) => {
       return [...acc, ...majors];
     }, []);
+
+    const handleResumeData = (data) => {
+      console.log('Received resume data:', data);
+    
+      // Create username from full name (firstname + lastname)
+      const nameParts = (data.name || '').split(' ');
+      const username = nameParts
+        .join('')
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '');
+    
+      // Extract company info from work_experience
+      const workExperience = data.work_experience || '';
+      const companyMatch = workExperience.match(/at\s+(.+)$/);
+      const positionMatch = workExperience.match(/^([^at]+)/);
+      const companyName = companyMatch ? companyMatch[1].trim() : '';
+      const position = positionMatch ? positionMatch[1].trim() : '';
+    
+      // Extract degree info
+      const educationParts = (data.education || '').match(/([^in]+)\s+in\s+(.+)/);
+      const degree = educationParts ? educationParts[1].trim() : '';
+      const major = educationParts ? educationParts[2].trim() : '';
+    
+      // Process skills
+      const skillsArray = data.skills ? data.skills.split(', ').filter(Boolean) : [];
+    
+      // Create bio from available information
+      const bio = [
+        data.projects && `Projects: ${data.projects}`,
+        data.certifications && `Certifications: ${data.certifications}`,
+        workExperience && `Experience: ${workExperience}`
+      ].filter(Boolean).join('. ');
+    
+      // Extract GitHub and LinkedIn URLs
+      const socialLinks = {
+        github: data.github || '',
+        linkedin: data.linkedin || ''
+      };
+    
+      // Update form data
+      setFormData(prev => ({
+        ...prev,
+        username,
+        email: data.email || '',
+        profile: {
+          ...prev.profile,
+          college: {
+            ...prev.profile.college,
+            degree: degree || '',
+            major: major || ''
+          },
+          company: {
+            ...prev.profile.company,
+            name: companyName || '',
+            position: position || ''
+          },
+          location: data.location || '',
+          bio: bio || '',
+          phone: data.phone || '',
+          github: socialLinks.github,
+          linkedin: socialLinks.linkedin,
+          skills: skillsArray
+        }
+      }));
+    
+      // Update selected skills
+      if (skillsArray.length > 0) {
+        setSelectedSkills(skillsArray);
+      }
+    
+      // Log the updates for debugging
+      console.log('Updated form data:', {
+        username,
+        email: data.email,
+        degree,
+        major,
+        companyName,
+        position,
+        skills: skillsArray,
+        bio,
+        phone: data.phone,
+        github: socialLinks.github,
+        linkedin: socialLinks.linkedin
+      });
+    
+      // Show success message
+      toast.success('Resume data imported successfully!');
+    
+      // If we have degree and major, update recommended skills
+      if (degree && major) {
+        const recommendations = getRecommendedSkills(degree, major);
+        setRecommendedSkills(recommendations);
+      }
+    };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -431,6 +526,7 @@ export default function Signup() {
                 {/* Step 1: Account Details */}
                 {step === 1 && (
                   <>
+                  <ResumeUploader onResumeData={handleResumeData} />
                     <div className={styles.inputContainer}>
                       <label className={styles.label}>Username</label>
                       <div className={styles.inputWrapper}>

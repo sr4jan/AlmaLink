@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { 
@@ -9,43 +10,26 @@ import {
   Users,
   Search,
   Filter,
-  ChevronDown,
   Plus,
-  Calendar as CalendarIcon,
-  Trash2,
-  Tag,
-  Link as LinkIcon,
   UserCircle,
   Share2,
   Star,
-  ExternalLink
+  ArrowRight,
+  ExternalLink,
+  Trash2,
+  Tag
 } from 'lucide-react';
-import styles from '/styles/Events.module.css';
+import styles from '@/styles/Events.module.css';
+import { formatDisplayDate } from '@/utils/dateFormat';
 
 export default function EventsPage() {
+  const router = useRouter();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    description: "",
-    category: "tech",
-    type: "In-Person",
-    date: "",
-    time: "",
-    location: "",
-    capacity: "",
-    image: "", // New field for event image URL
-    tags: "",
-    registrationLink: "",
-    organizer: "",
-    userId: "sr4jan"
-  });
+  const [isFiltering, setIsFiltering] = useState(false);
 
-  // Example categories - you can modify these
   const categories = [
     { id: "all", name: "All Events", color: "#0077ff" },
     { id: "tech", name: "Technology", color: "#00c6ff" },
@@ -55,7 +39,61 @@ export default function EventsPage() {
     { id: "workshop", name: "Workshops", color: "#f59e0b" }
   ];
 
-  // ... your existing fetchEvents and other functions ...
+  useEffect(() => {
+    fetchEvents();
+  }, [selectedCategory, searchTerm]);
+
+  const fetchEvents = async () => {
+    try {
+      setIsFiltering(true);
+      const params = new URLSearchParams();
+      if (selectedCategory !== 'all') params.append('category', selectedCategory);
+      if (searchTerm) params.append('search', searchTerm);
+
+      const response = await axios.get(`/api/events?${params}`);
+      if (response.data.success) {
+        setEvents(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      toast.error("Failed to load events");
+    } finally {
+      setLoading(false);
+      setIsFiltering(false);
+    }
+  };
+
+  const handleDelete = async (eventId) => {
+    if (!confirm('Are you sure you want to delete this event?')) return;
+
+    try {
+      const response = await axios.delete(`/api/events/${eventId}`, {
+        data: { userId: "sr4jan" }
+      });
+
+      if (response.data.success) {
+        toast.success("Event deleted successfully");
+        fetchEvents();
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      toast.error(error.response?.data?.message || "Failed to delete event");
+    }
+  };
+
+  const handleShare = async (event) => {
+    try {
+      await navigator.share({
+        title: event.title,
+        text: event.description,
+        url: event.registrationLink
+      });
+    } catch (error) {
+      // Fallback to copying link
+      navigator.clipboard.writeText(event.registrationLink);
+      toast.success("Registration link copied to clipboard!");
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -94,7 +132,7 @@ export default function EventsPage() {
         <div className={styles.statsContainer}>
           <div className={styles.statCard}>
             <Calendar size={24} />
-            <h3>{events.length}</h3>
+            <h3>{events.filter(e => e.status === 'upcoming').length}</h3>
             <p>Upcoming Events</p>
           </div>
           <div className={styles.statCard}>
@@ -131,7 +169,7 @@ export default function EventsPage() {
 
       {/* Create Event Button */}
       <button
-        onClick={() => setShowForm(true)}
+        onClick={() => router.push('/events/create')}
         className={styles.createEventButton}
       >
         <Plus size={20} />
@@ -151,7 +189,7 @@ export default function EventsPage() {
             <h3>No Events Yet</h3>
             <p>Be the first to create an exciting event!</p>
             <button
-              onClick={() => setShowForm(true)}
+              onClick={() => router.push('/events/create')}
               className={styles.createFirstButton}
             >
               Create Your First Event
@@ -166,7 +204,12 @@ export default function EventsPage() {
                   alt={event.title}
                   className={styles.eventImage}
                 />
-                <div className={styles.eventBadge} style={{ backgroundColor: categories.find(c => c.id === event.category)?.color }}>
+                <div 
+                  className={styles.eventBadge} 
+                  style={{ 
+                    backgroundColor: categories.find(c => c.id === event.category)?.color 
+                  }}
+                >
                   {event.type}
                 </div>
               </div>
@@ -175,17 +218,7 @@ export default function EventsPage() {
                 <div className={styles.eventMeta}>
                   <span className={styles.eventDate}>
                     <Calendar size={16} />
-                    {new Date(event.datetime).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric'
-                    })}
-                  </span>
-                  <span className={styles.eventTime}>
-                    <Clock size={16} />
-                    {new Date(event.datetime).toLocaleTimeString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
+                    {formatDisplayDate(event.date)}
                   </span>
                 </div>
 
@@ -200,13 +233,16 @@ export default function EventsPage() {
                   {event.description.slice(0, 120)}...
                 </p>
 
-                <div className={styles.eventTags}>
-                  {event.tags?.map((tag, index) => (
-                    <span key={index} className={styles.tag}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                {event.tags && event.tags.length > 0 && (
+                  <div className={styles.eventTags}>
+                    {event.tags.map((tag, index) => (
+                      <span key={index} className={styles.tag}>
+                        <Tag size={12} />
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
 
                 <div className={styles.eventFooter}>
                   <div className={styles.organizerInfo}>
@@ -219,11 +255,16 @@ export default function EventsPage() {
                       <button
                         onClick={() => handleDelete(event._id)}
                         className={styles.deleteButton}
+                        title="Delete event"
                       >
                         <Trash2 size={16} />
                       </button>
                     )}
-                    <button className={styles.shareButton}>
+                    <button 
+                      onClick={() => handleShare(event)}
+                      className={styles.shareButton}
+                      title="Share event"
+                    >
                       <Share2 size={16} />
                     </button>
                     <a
@@ -242,15 +283,6 @@ export default function EventsPage() {
           ))
         )}
       </section>
-
-      {/* Create Event Modal */}
-      {showForm && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            {/* Your existing form code here, styled with new classes */}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

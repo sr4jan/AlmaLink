@@ -121,12 +121,14 @@ export default function JobPortalPage() {
       const response = await axios.delete(`/api/jobs/${id}`, {
         data: { userId: "sr4jan" }
       });
-
+  
+      // Don't throw error on success
       if (response.data.success) {
         toast.success("Job deleted successfully!");
-        await fetchJobs();
+        await fetchJobs(); // Refresh the jobs list
       } else {
-        throw new Error(response.data.message);
+        // Only throw error if operation was not successful
+        toast.error(response.data.message || "Failed to delete job");
       }
     } catch (error) {
       console.error("Error deleting job:", error);

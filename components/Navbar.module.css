@@ -1,413 +1,276 @@
 .navbar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 1400px;
   height: 64px;
   background: var(--nav-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(var(--nav-blur));
+  -webkit-backdrop-filter: blur(var(--nav-blur));
+  border: 1px solid var(--nav-border);
+  border-radius: 20px;
   z-index: 1000;
-  transition: all 0.3s ease;
-  border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .scrolled {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px var(--nav-shadow);
+  background: var(--bg-elevated);
 }
 
 .navContent {
-  max-width: 1400px;
-  margin: 0 auto;
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  justify-content: space-between;
   padding: 0 1.5rem;
 }
 
-/* Logo styles */
+/* Logo */
 .logo {
   flex-shrink: 0;
 }
 
 .logo a {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   background: var(--primary-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-decoration: none;
   letter-spacing: -0.5px;
+  filter: drop-shadow(0 2px 4px var(--nav-shadow));
 }
 
-/* Navigation section */
-.scrollableNav {
-  position: relative;
+/* Navigation Container */
+.navigationWrapper {
   flex: 1;
   display: flex;
-  align-items: center;
-  min-width: 0;
-}
-
-.nav {
-  display: flex;
-  gap: 26px;
-  align-items: center;
-}
-
-.linksContainer {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  scroll-behavior: smooth;
+  justify-content: center;
   padding: 0 1rem;
-  margin: 0 -1rem;
-  flex: 1;
 }
 
-.linksContainer::-webkit-scrollbar {
-  display: none;
+.navigationContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  border-radius: 16px;
 }
 
-/* Navigation links */
-.navLink {
-  color: var(--text-primary);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  padding: 0.5rem 0;
-  white-space: nowrap;
+.navItem {
   position: relative;
-  cursor: pointer;
-  background: transparent; /* Remove default background */
-  border: none;
-}
-
-.navLink:hover {
-  color: var(--primary);
-}
-
-.navLink::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background: var(--primary-gradient);
-  transition: width 0.2s ease;
-}
-
-.navLink:hover::after {
-  width: 100%;
-}
-
-/* Scroll buttons */
-.scrollButton {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 2;
-  box-shadow: 0 2px 8px var(--shadow-color);
+  padding: 0.75rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
 }
 
-.scrollButton:hover {
-  background: var(--bg-secondary);
+.navItem:hover {
   color: var(--primary);
-  transform: translateY(-50%) scale(1.05);
+  transform: translateY(-2px);
 }
 
-.scrollLeft {
-  left: -14px;
+.icon {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 4px var(--nav-shadow));
 }
 
-.scrollRight {
-  right: -14px;
+.label {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  background: var(--bg-elevated);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--nav-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+  backdrop-filter: blur(var(--nav-blur));
+  -webkit-backdrop-filter: blur(var(--nav-blur));
+  box-shadow: 0 4px 12px var(--nav-shadow);
 }
 
-/* Right section */
+.navItem:hover .label {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.navItem:hover .icon {
+  transform: scale(1.2);
+}
+
+/* Right Section */
 .rightSection {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-left: auto;
+  gap: 1rem;
 }
 
-/* Search */
-.searchContainer {
-  position: relative;
-  margin-right: 16px; /* Add space between search and profile */
-}
-
-.searchInput {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 8px 36px 8px 16px; /* Increase right padding for icon */
-  font-size: 14px;
-  color: var(--text-primary);
-  width: 200px;
-  transition: all 0.3s ease;
-}
-
-.searchInput:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px var(--primary-transparent);
-  width: 250px;
-}
-
-.searchIcon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-secondary);
-  pointer-events: none; /* Ensure icon doesn't interfere with clicks */
-}
-
-/* Auth buttons */
-.authButtons {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.loginBtn {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  color: var(--text-primary);
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.loginBtn:hover {
-  background: var(--bg-secondary);
-  border-color: var(--primary);
-  transform: translateY(-1px);
-}
-
-.signupBtn {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  background: var(--primary-gradient);
-  color: white;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.signupBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--primary-shadow);
-}
-
-/* Theme toggle button */
+/* Theme Toggle */
 .themeToggleBtn {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 8px;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--nav-border);
+  background: var(--nav-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(var(--nav-blur));
+  -webkit-backdrop-filter: blur(var(--nav-blur));
 }
 
 .themeToggleBtn:hover {
-  background: var(--bg-secondary);
-  border-color: var(--primary);
-  transform: translateY(-1px);
+  color: var(--primary);
+  transform: translateY(-2px) rotate(15deg);
+  box-shadow: 0 4px 12px var(--nav-shadow);
 }
 
-/* User controls */
-.userControls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  position: relative; /* Ensure proper stacking */
-  z-index: 2; /* Place above search bar */
-}
-
+/* Profile Button */
 .profileButton {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: none;
   background: none;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.2s ease;
-  position: relative; /* Ensure proper stacking */
-  z-index: 3; /* Place above other elements */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .profileButton:hover {
-  transform: scale(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--nav-shadow);
 }
 
-.avatar {
+.profileAvatar,
+.profileAvatarPlaceholder {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+  border-radius: 12px;
+  border: 1px solid var(--nav-border);
 }
 
-.avatarPlaceholder {
-  width: 100%;
-  height: 100%;
-  background: var(--primary-transparent);
-  color: var(--primary);
+.profileAvatarPlaceholder {
+  background: var(--primary-gradient);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 16px;
-  text-transform: uppercase;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .searchContainer {
-    width: 160px;
-  }
-  
-  .searchInput {
-    width: 160px;
-  }
-  
-  .searchInput:focus {
-    width: 220px;
-  }
+/* Auth Buttons */
+.authButtons {
+  display: flex;
+  gap: 1rem;
 }
 
+.loginBtn,
+.signupBtn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(var(--nav-blur));
+  -webkit-backdrop-filter: blur(var(--nav-blur));
+}
+
+.loginBtn {
+  color: var(--text-primary);
+  background: var(--nav-bg);
+  border: 1px solid var(--nav-border);
+}
+
+.signupBtn {
+  color: white;
+  background: var(--primary-gradient);
+  border: 1px solid transparent;
+}
+
+.loginBtn:hover,
+.signupBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--nav-shadow);
+}
+
+/* Media Queries */
 @media (max-width: 768px) {
-  .navContent {
-    padding: 0 1rem;
-    gap: 1rem;
+  .navbar {
+    top: 0;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .navigationContainer {
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .navigationContainer::-webkit-scrollbar {
+    display: none;
   }
 
   .logo a {
     font-size: 1.25rem;
   }
 
-  .searchContainer {
-    display: none;
-  }
-
-  .nav {
-    gap: 1.5rem;
-  }
-
-  .navLink {
-    font-size: 0.85rem;
-  }
-
-  .userSection {
-    gap: 0.5rem;
-  }
-
-  .logoutBtn {
-    padding: 0.4rem;
-  }
-
-  .logoutBtn span {
+  .authButtons .loginBtn {
     display: none;
   }
 }
 
 @media (max-width: 480px) {
-  .nav {
-    gap: 1rem;
+  .navContent {
+    padding: 0 1rem;
   }
 
-  .authButtons .loginBtn {
-    display: none;
-  }
-  
-  .authButtons .signupBtn {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.85rem;
+  .navigationContainer {
+    gap: 0.25rem;
   }
 
-  .dashboardLink {
-    display: none;
+  .navItem {
+    padding: 0.5rem;
   }
 }
-.profile {
-  position: relative;
-  cursor: pointer;
+
+/* Hover Animation for Nav Items */
+@keyframes floatIcon {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
-.profileAvatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-.profileAvatarPlaceholder {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #3b82f6;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  font-size: 14px;
-  border: 2px solid #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-.profile:hover .profileAvatar,
-.profile:hover .profileAvatarPlaceholder {
-  transform: scale(1.1);
-}
-.profileAvatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.profileAvatarPlaceholder {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #3b82f6;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  font-size: 14px;
+.navItem:hover .icon {
+  animation: floatIcon 0.6s ease-in-out;
 }

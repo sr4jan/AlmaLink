@@ -13,6 +13,22 @@ const voteSchema = new mongoose.Schema({
   }
 }, { _id: false });
 
+const replySchema = new mongoose.Schema({
+  text: {
+    type: String,
+    required: true
+  },
+  postedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 const questionSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -24,9 +40,9 @@ const questionSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  category: {
+    type: String,
+    default: 'Pending'
   },
   votes: {
     type: [voteSchema],
@@ -37,24 +53,17 @@ const questionSchema = new mongoose.Schema({
     default: 0
   },
   replies: {
-    type: [{
-      text: String,
-      postedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now
-      }
-    }],
+    type: [replySchema],
     default: []
   },
-  category: {
-    type: String,
-    default: 'Pending'
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
+}, {
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
 export default mongoose.models.Question || mongoose.model('Question', questionSchema);

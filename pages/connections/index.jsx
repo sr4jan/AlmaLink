@@ -3,34 +3,30 @@ import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import ProfileModal from "@/components/ProfileModal";
+import MessageModal from "@/components/MessageModal";
 import { 
   Search,
   MessageCircle,
-  Plus,
-  UserPlus,
   Mail,
-  ExternalLink,
-  MapPin,
-  Briefcase,
+  UserPlus,
+  Users,
   GraduationCap,
-  Link as LinkIcon,
-  ChevronRight,
-  ChevronLeft
+  Briefcase,
+  X
 } from 'lucide-react';
-import styles from '/styles/Connections.module.css';
-
-// Keep your MOCK_STORIES for now
-const MOCK_STORIES = [/* ... your existing mock stories ... */];
+import styles from '@/styles/Connections.module.css';
 
 export default function ConnectionsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [stories, setStories] = useState(MOCK_STORIES);
   const [connections, setConnections] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedStory, setSelectedStory] = useState(null);
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [showMessageModal, setShowMessageModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('all');
+  const [activeTab, setActiveTab] = useState('alumni');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -39,14 +35,15 @@ export default function ConnectionsPage() {
     }
 
     if (status === "authenticated") {
-      fetchConnections();
+      fetchConnections(activeTab);
     }
-  }, [status]);
+  }, [status, activeTab]);
 
-  const fetchConnections = async () => {
+  const fetchConnections = async (filter) => {
     try {
       setLoading(true);
-      const response = await fetch('/api/connections');
+      setError(null);
+      const response = await fetch(`/api/connections/filtered?filter=${filter}`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch connections');
@@ -56,218 +53,182 @@ export default function ConnectionsPage() {
       setConnections(data);
     } catch (error) {
       console.error('Error fetching connections:', error);
+      setError('Failed to load connections');
       toast.error('Failed to load connections');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleViewStory = (story) => {
-    setSelectedStory(story);
-    setStories(prev => 
-      prev.map(s => 
-        s.id === story.id 
-          ? { ...s, user: { ...s.user, hasUpdate: false } }
-          : s
-      )
-    );
+  const handleProfileClick = (profile) => {
+    setSelectedProfile(profile);
   };
 
-  // Filter connections based on search and filter
+  const handleMessage = (profile) => {
+    setSelectedProfile(profile);
+    setShowMessageModal(true);
+  };
+
+  const handleSendMessage = async (message) => {
+    try {
+      const response = await fetch('/api/chat/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: message,
+          receiver: selectedProfile.id
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to send message');
+
+      toast.success('Message sent successfully!');
+      setShowMessageModal(false);
+      router.push('/chat'); // Redirect to chat page
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast.error('Failed to send message');
+    }
+  };
+
+  // Filter connections based on search
   const filteredConnections = connections.filter(connection => {
-    const matchesSearch = (
-      connection.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      connection.bio?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      connection.skills?.some(skill => 
-        skill.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-
-    if (filter === 'all') return matchesSearch;
-    
-    // Filter by role/category
-    const filterMap = {
-      'tech': ['software', 'engineer', 'developer', 'tech'],
-      'research': ['researcher', 'scientist', 'phd', 'research'],
-      'business': ['manager', 'consultant', 'analyst', 'business']
-    };
-
-    return matchesSearch && (
-      connection.role?.toLowerCase().split(' ').some(term => 
-        filterMap[filter]?.some(filterTerm => 
-          term.includes(filterTerm)
-        )
-      )
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      connection.name?.toLowerCase().includes(searchLower) ||
+      connection.bio?.toLowerCase().includes(searchLower) ||
+      connection.company?.toLowerCase().includes(searchLower) ||
+      connection.position?.toLowerCase().includes(searchLower) ||
+      connection.skills?.some(skill => skill.toLowerCase().includes(searchLower))
     );
   });
 
-  if (status === "loading") {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner}></div>
-        <p>Loading connections...</p>
-      </div>
-    );
-  }
-
   return (
     <div className={styles.container}>
-      {/* Search Section */}
-      <div className={styles.searchSection}>
+      {/* Header Section */}
+      <div className={styles.header}>
         <div className={styles.searchBar}>
           <Search size={20} />
           <input
             type="text"
-            placeholder="Search connections..."
+            placeholder={`Search ${activeTab === 'alumni' ? 'alumni' : 'students'}...`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
 
-      {/* Stories Section */}
-      <section className={styles.storiesSection}>
-        {/* ... your existing stories section ... */}
-      </section>
+      {/* Tabs Section */}
+      <div className={styles.tabs}>
+        <button
+          className={`${styles.tab} ${activeTab === 'alumni' ? styles.active : ''}`}
+          onClick={() => setActiveTab('alumni')}
+        >
+          <GraduationCap size={18} />
+          Alumni
+        </button>
+        <button
+          className={`${styles.tab} ${activeTab === 'students' ? styles.active : ''}`}
+          onClick={() => setActiveTab('students')}
+        >
+          <Users size={18} />
+          Students
+        </button>
+      </div>
 
       {/* Connections Grid */}
-      <section className={styles.connectionsSection}>
-        <div className={styles.sectionHeader}>
-          <h2>Your Connections</h2>
-          <div className={styles.filters}>
-            {['all', 'tech', 'research', 'business'].map((filterType) => (
-              <button
-                key={filterType}
-                className={`${styles.filterButton} ${filter === filterType ? styles.active : ''}`}
-                onClick={() => setFilter(filterType)}
-              >
-                {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
-              </button>
-            ))}
+      <div className={styles.connectionsGrid}>
+        {loading ? (
+          <div className={styles.loading}>
+            <div className={styles.spinner} />
+            <p>Loading {activeTab}...</p>
           </div>
-        </div>
+        ) : error ? (
+          <div className={styles.error}>
+            <p>{error}</p>
+            <button onClick={() => fetchConnections(activeTab)}>Retry</button>
+          </div>
+        ) : filteredConnections.length === 0 ? (
+          <div className={styles.noResults}>
+            {searchTerm 
+              ? `No ${activeTab} found matching your search`
+              : `No ${activeTab} available`
+            }
+          </div>
+        ) : (
+          filteredConnections.map((connection) => (
+            <div 
+              key={connection.id} 
+              className={styles.connectionCard}
+              onClick={() => handleProfileClick(connection)}
+            >
+              <div className={styles.cardHeader}>
+                <img
+                  src={connection.avatar}
+                  alt={connection.name}
+                  className={styles.avatar}
+                />
+                <div className={styles.headerInfo}>
+                  <h3>{connection.name}</h3>
+                  <p className={styles.role}>
+                    {connection.position || connection.major}
+                  </p>
+                </div>
+              </div>
 
-        <div className={styles.connectionsGrid}>
-          {loading ? (
-            <div className={styles.loading}>
-              <div className={styles.spinner}></div>
-              <p>Loading connections...</p>
-            </div>
-          ) : filteredConnections.length === 0 ? (
-            <div className={styles.noResults}>
-              {searchTerm 
-                ? "No connections found matching your search"
-                : "No connections available yet"
-              }
-            </div>
-          ) : (
-            filteredConnections.map((connection) => (
-              <div key={connection.id} className={styles.connectionCard}>
-                <div className={styles.cardHeader}>
-                  <img
-                    src={connection.avatar}
-                    alt={connection.name}
-                    className={styles.avatar}
-                  />
-                  <div className={styles.headerInfo}>
-                    <h3>{connection.name}</h3>
-                    <p className={styles.role}>{connection.role}</p>
+              <div className={styles.cardBody}>
+                {connection.company && (
+                  <div className={styles.infoItem}>
+                    <Briefcase size={16} />
+                    <span>{connection.company}</span>
                   </div>
-                </div>
-
-                <div className={styles.cardBody}>
-                  {connection.company && (
-                    <div className={styles.infoItem}>
-                      <Briefcase size={16} />
-                      <span>{connection.company}</span>
-                    </div>
-                  )}
-                  {connection.location && (
-                    <div className={styles.infoItem}>
-                      <MapPin size={16} />
-                      <span>{connection.location}</span>
-                    </div>
-                  )}
-                  {connection.education && (
-                    <div className={styles.infoItem}>
-                      <GraduationCap size={16} />
-                      <span>{connection.education}</span>
-                    </div>
-                  )}
-
-                  {connection.bio && (
-                    <p className={styles.bio}>{connection.bio}</p>
-                  )}
-
-                  {connection.skills?.length > 0 && (
-                    <div className={styles.skills}>
-                      {connection.skills.map((skill, index) => (
-                        <span key={index} className={styles.skill}>
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {connection.achievements?.length > 0 && (
-                    <div className={styles.achievements}>
-                      {connection.achievements.map((achievement, index) => (
-                        <div key={index} className={styles.achievement}>
-                          <span>🏆</span> {achievement}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
+                )}
                 <div className={styles.cardActions}>
-                  <button className={styles.actionButton}>
+                  <button 
+                    className={styles.actionButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMessage(connection);
+                    }}
+                  >
                     <MessageCircle size={18} />
                     Message
                   </button>
-                  <button className={styles.actionButton}>
+                  <button 
+                    className={styles.actionButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.location.href = `mailto:${connection.email}`;
+                    }}
+                  >
                     <Mail size={18} />
                     Email
                   </button>
-                  <button className={styles.actionButton}>
-                    <LinkIcon size={18} />
-                    Connect
-                  </button>
                 </div>
               </div>
-            ))
-          )}
-        </div>
-      </section>
+            </div>
+          ))
+        )}
+      </div>
 
-      {/* Story Modal */}
-      {selectedStory && (
-        <div 
-          className={styles.storyModal}
-          onClick={() => setSelectedStory(null)}
-        >
-          <div 
-            className={styles.storyContent}
-            onClick={e => e.stopPropagation()}
-          >
-            <div className={styles.storyHeader}>
-              <img 
-                src={selectedStory.user.avatar} 
-                alt={selectedStory.user.name} 
-              />
-              <div>
-                <h3>{selectedStory.user.name}</h3>
-                <p>{selectedStory.user.role}</p>
-              </div>
-            </div>
-            <div className={styles.storyBody}>
-              <p>{selectedStory.content.text}</p>
-              <span className={styles.timestamp}>
-                {new Date(selectedStory.content.timestamp).toLocaleTimeString()}
-              </span>
-            </div>
-          </div>
-        </div>
+      {/* Profile Modal */}
+      {selectedProfile && (
+        <ProfileModal
+          profile={selectedProfile}
+          onClose={() => setSelectedProfile(null)}
+          onMessage={handleMessage}
+        />
+      )}
+
+      {/* Message Modal */}
+      {showMessageModal && (
+        <MessageModal
+          recipient={selectedProfile}
+          onClose={() => setShowMessageModal(false)}
+          onSend={handleSendMessage}
+        />
       )}
     </div>
   );

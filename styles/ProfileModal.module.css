@@ -1,0 +1,267 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .modalContent {
+    background: var(--bg-elevated);
+    border-radius: 24px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid var(--border-color);
+    animation: slideUp 0.3s ease;
+    color: var(--text-primary);
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--bg-secondary);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+  
+  .closeButton:hover {
+    background: var(--primary);
+    color: white;
+    transform: rotate(90deg);
+  }
+  
+  .profileHeader {
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+  }
+  
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    padding: 2px;
+    transition: all 0.3s ease;
+  }
+  
+  .headerInfo h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  
+  .role {
+    color: var(--primary);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .profileBody {
+    padding: 2rem;
+  }
+  
+  .section {
+    margin-bottom: 2rem;
+  }
+  
+  .section h3 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .section p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .skill {
+    background: var(--primary-transparent);
+    color: var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+  
+  .skill:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .experienceItem {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .experienceItem h4 {
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+  }
+  
+  .dates {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+  }
+  
+  .achievements {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .achievements li {
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  
+  .achievements li::before {
+    content: "🏆";
+    position: absolute;
+    left: 0;
+  }
+  
+  .profileActions {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-secondary);
+  }
+  
+  .messageButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--primary-gradient);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .messageButton:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-primary);
+  }
+  
+  .socialLinks {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .socialLink {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+  }
+  
+  .socialLink:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    border-color: transparent;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .modalContent {
+      width: 95%;
+      max-height: 95vh;
+    }
+  
+    .profileHeader {
+      flex-direction: column;
+      text-align: center;
+      padding: 1.5rem;
+    }
+  
+    .profileBody {
+      padding: 1.5rem;
+    }
+  
+    .profileActions {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .messageButton {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .socialLinks {
+      justify-content: center;
+    }
+  }

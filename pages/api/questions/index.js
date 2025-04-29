@@ -1,71 +1,100 @@
 import dbConnect from "@/lib/mongodb";
 import Question from "@/models/Question";
+import User from "@/models/User";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import axios from "axios";
+import { categorySkillsMap } from "@/data/categorySkillsMap";
 
 // ML model configuration
 const ML_MODEL_URL = "https://question-classifier-backend.onrender.com";
 
-// Function to classify question using ML model
 async function classifyQuestion(title, description) {
   try {
-    // Combine title and description into a single text
     const text = description ? `${title} ${description}` : title;
-
     const response = await axios.post(`${ML_MODEL_URL}/predict`, {
-      text: text // Send in the format the API expects
+      text: text
     });
-
-    if (response.data && response.data.category) {
-      return response.data.category;
-    }
-    
-    return 'General'; // Default category if classification fails
+    return response.data?.category || 'General';
   } catch (error) {
     console.error("ML Classification error:", error);
-    console.error("Error details:", error.response?.data); // Log the error response
-    return 'General'; // Default category if service is unavailable
+    return 'General';
   }
 }
 
 export default async function handler(req, res) {
   try {
     await dbConnect();
-    const session = await getServerSession(req, res, authOptions);
 
+    // GET method - Fetch questions
     if (req.method === "GET") {
+      const session = await getServerSession(req, res, authOptions);
+      
+      // First, get all questions with populated user data
       const questions = await Question
-  .find()
-  .populate({
-    path: 'postedBy',
-    select: 'username email profile.avatar profile.firstName profile.lastName'
-  })
-  .sort({ createdAt: -1 });
-        
-  const formattedQuestions = questions.map(q => {
-    const question = q.toObject();
-    const postedBy = question.postedBy || {};
-    
-    return {
-      ...question,
-      postedBy: {
-        _id: postedBy._id?.toString(),
-        username: postedBy.username,
-        name: postedBy.username || 
-              `${postedBy.profile?.firstName || ''} ${postedBy.profile?.lastName || ''}`.trim() || 
-              postedBy.email?.split('@')[0] || 'Anonymous',
-        avatar: postedBy.profile?.avatar || 
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(postedBy.username || 'A')}&background=random`,
-        email: postedBy.email
+        .find()
+        .populate('postedBy', 'username email profile.avatar profile.firstName profile.lastName')
+        .sort({ createdAt: -1 })
+        .lean();
+
+      // If user is alumni, filter questions based on their skills
+      let filteredQuestions = [...questions];
+      
+      if (session?.user?.role === 'alumni') {
+        try {
+          const currentUser = await User.findById(session.user.id).lean();
+          const userSkills = currentUser?.profile?.skills || [];
+
+          filteredQuestions = questions.filter(question => {
+            // Always show pending or general questions
+            if (!question.category || question.category === 'Pending' || question.category === 'General') {
+              return true;
+            }
+
+            // Get required skills for the question category
+            const categorySkills = categorySkillsMap[question.category] || [];
+            
+            // Show question if user has at least one required skill
+            return categorySkills.some(skill => userSkills.includes(skill));
+          });
+        } catch (error) {
+          console.error("Error filtering questions:", error);
+          // If there's an error filtering, return all questions
+          filteredQuestions = questions;
+        }
       }
-    };
-  });
+
+      // Format the questions for response
+      const formattedQuestions = filteredQuestions.map(question => ({
+        ...question,
+        _id: question._id.toString(),
+        postedBy: question.postedBy ? {
+          _id: question.postedBy._id.toString(),
+          username: question.postedBy.username,
+          name: question.postedBy.username || 
+                `${question.postedBy.profile?.firstName || ''} ${question.postedBy.profile?.lastName || ''}`.trim() || 
+                question.postedBy.email?.split('@')[0] || 
+                'Anonymous',
+          avatar: question.postedBy.profile?.avatar || 
+                 `https://ui-avatars.com/api/?name=${encodeURIComponent(question.postedBy.username || 'A')}&background=random`,
+          email: question.postedBy.email
+        } : null,
+        votes: question.votes || [],
+        voteCount: question.voteCount || 0,
+        replies: (question.replies || []).map(reply => ({
+          ...reply,
+          _id: reply._id.toString(),
+          postedBy: reply.postedBy.toString()
+        }))
+      }));
 
       return res.status(200).json(formattedQuestions);
     }
 
+    // POST method - Create new question
     if (req.method === "POST") {
+      const session = await getServerSession(req, res, authOptions);
+      
       if (!session) {
         return res.status(401).json({ message: "Please login to post questions" });
       }
@@ -76,51 +105,60 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: "Title is required" });
       }
 
-      // First, create the question with "Pending" category
-      const question = new Question({
+      // Create initial question with pending category
+      const newQuestion = new Question({
         title: title.trim(),
         description: description.trim(),
         postedBy: session.user.id,
+        category: 'Pending',
         createdAt: new Date(),
         votes: [],
         voteCount: 0,
-        replies: [],
-        category: 'Pending'
+        replies: []
       });
-      await question.populate({
-        path: 'postedBy',
-        select: 'username email profile.avatar profile.firstName profile.lastName'
-      });
-      await question.save();
 
-      // Then classify the question
+      await newQuestion.save();
+
+      // Populate user data
+      await newQuestion.populate('postedBy', 'username email profile.avatar profile.firstName profile.lastName');
+
+      // Classify the question
       const category = await classifyQuestion(title, description);
-      
-      // Update the question with the classified category
-      question.category = category;
-      await question.save();
+      newQuestion.category = category;
+      await newQuestion.save();
 
-      // Populate and return the formatted question
-      const populatedQuestion = await Question.findById(question._id)
-        .populate('postedBy', 'username email _id');
-
+      // Format the response
       const formattedQuestion = {
-        ...populatedQuestion.toObject(),
+        ...newQuestion.toObject(),
+        _id: newQuestion._id.toString(),
         postedBy: {
-          _id: populatedQuestion.postedBy._id.toString(),
-          username: populatedQuestion.postedBy.username || populatedQuestion.postedBy.email?.split('@')[0],
-          email: populatedQuestion.postedBy.email
-        }
+          _id: newQuestion.postedBy._id.toString(),
+          username: newQuestion.postedBy.username,
+          name: newQuestion.postedBy.username || 
+                `${newQuestion.postedBy.profile?.firstName || ''} ${newQuestion.postedBy.profile?.lastName || ''}`.trim() || 
+                newQuestion.postedBy.email?.split('@')[0] || 
+                'Anonymous',
+          avatar: newQuestion.postedBy.profile?.avatar || 
+                 `https://ui-avatars.com/api/?name=${encodeURIComponent(newQuestion.postedBy.username || 'A')}&background=random`,
+          email: newQuestion.postedBy.email
+        },
+        votes: [],
+        voteCount: 0,
+        replies: []
       };
 
       return res.status(201).json(formattedQuestion);
     }
 
+    // Method not allowed
+    return res.status(405).json({ message: `Method ${req.method} Not Allowed` });
+
   } catch (error) {
     console.error("API Error:", error);
     return res.status(500).json({ 
       message: "Server error", 
-      error: error.message 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 }

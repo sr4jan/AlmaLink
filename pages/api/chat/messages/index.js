@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../auth/[...nextauth]";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import dbConnect from "@/lib/mongodb";
 import Message from "@/models/Message";
 import User from "@/models/User";
@@ -23,16 +23,17 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
       const { content, receiver } = req.body;
       
-      if (!content && !req.body.attachments) {
+      if (!content) {
         return res.status(400).json({ message: "Message content is required" });
       }
 
-      // Create message using currentUser._id
+      // Create message
       const message = await Message.create({
         sender: currentUser._id,
         receiver,
-        content: content || '',
-        attachments: req.body.attachments || []
+        content,
+        createdAt: new Date(),
+        read: false
       });
 
       // Populate sender and receiver details

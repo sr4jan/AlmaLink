@@ -289,7 +289,7 @@
 }
 .scrollDown {
   position: absolute;
-  bottom: 25px;
+  bottom: 0px;
   left: 50%;
   transform: translateX(-50%);
   background: none;

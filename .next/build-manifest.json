@@ -28,25 +28,20 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/dashboard": [
+    "/chat": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/dashboard.js"
+      "static/chunks/pages/chat.js"
     ],
-    "/dashboard/profile": [
+    "/connections": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/dashboard/profile.js"
+      "static/chunks/pages/connections.js"
     ],
-    "/ideahub": [
+    "/livesessions": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/ideahub.js"
-    ],
-    "/questions": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/questions.js"
+      "static/chunks/pages/livesessions.js"
     ]
   },
   "ampFirstPages": []

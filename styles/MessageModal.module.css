@@ -1,0 +1,188 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--modal-overlay);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .modalContent {
+    background: var(--modal-bg);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid var(--modal-border);
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+    box-sizing: border-box;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--modal-input-bg);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--modal-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 2;
+  }
+  
+  .closeButton:hover {
+    background: var(--modal-button-hover);
+    transform: rotate(90deg);
+  }
+  
+  .modalHeader {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--modal-border);
+    background: var(--modal-input-bg);
+  }
+  
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    flex-shrink: 0;
+  }
+  
+  .modalHeader h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+    color: var(--modal-text);
+  }
+  
+  .modalHeader p {
+    color: var(--modal-text-secondary);
+    font-size: 0.9rem;
+  }
+  
+  .messageForm {
+    padding: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .messageForm textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    background: var(--modal-input-bg);
+    border: 1px solid var(--modal-border);
+    border-radius: 12px;
+    color: var(--modal-text);
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+  
+  .messageForm textarea::placeholder {
+    color: var(--modal-text-secondary);
+  }
+  
+  .messageForm textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-shadow);
+  }
+  
+  .sendButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+  
+  .sendButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--primary-shadow);
+  }
+  
+  .sendButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: linear-gradient(135deg, #808080, #666666);
+  }
+  
+  /* Dark scrollbar */
+  .messageForm textarea::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .messageForm textarea::-webkit-scrollbar-track {
+    background: var(--modal-input-bg);
+    border-radius: 4px;
+  }
+  
+  .messageForm textarea::-webkit-scrollbar-thumb {
+    background: var(--modal-border);
+    border-radius: 4px;
+  }
+  
+  .messageForm textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--modal-button-hover);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .modalContent {
+      width: 95%;
+      margin: 0 1rem;
+    }
+  
+    .modalHeader {
+      padding: 1.25rem;
+    }
+  
+    .messageForm {
+      padding: 1.25rem;
+    }
+  }

@@ -1,23 +1,43 @@
 import mongoose from 'mongoose';
 
 const DonationSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
-    required: [true, 'Name is required'],
-    trim: true,
-    maxLength: [50, 'Name cannot be more than 50 characters']
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  collegeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'College',
+    required: true
   },
   amount: {
     type: Number,
-    required: [true, 'Amount is required'],
-    min: [100, 'Minimum donation amount is ₹100'],
-    max: [100000, 'Maximum donation amount is ₹100,000']
+    required: true,
+    min: 100,
+    max: 100000
   },
   recurring: {
     type: Boolean,
     default: false
   },
-  userId: {
+  category: {
+    type: String,
+    required: true,
+    enum: ['infrastructure', 'library', 'equipment', 'scholarship']
+  },
+  paymentId: {
+    type: String,
+    required: true
+  },
+  orderId: {
     type: String,
     required: true
   },
@@ -30,11 +50,6 @@ const DonationSchema = new mongoose.Schema({
   timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
-});
-
-// Add a virtual for formatted date
-DonationSchema.virtual('formattedDate').get(function() {
-  return new Date(this.createdAt).toISOString();
 });
 
 export default mongoose.models.Donation || mongoose.model('Donation', DonationSchema);

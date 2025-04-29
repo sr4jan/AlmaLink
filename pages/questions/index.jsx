@@ -53,6 +53,7 @@ export default function QuestionsPage() {
   const [questions, setQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState({ title: "", description: "" });
   const [replyText, setReplyText] = useState({});
+  const [filteredCount, setFilteredCount] = useState(0);
   const [editingQuestionId, setEditingQuestionId] = useState(null);
   const [editQuestion, setEditQuestion] = useState({ title: "", description: "" });
   const [loadingStates, setLoadingStates] = useState({
@@ -75,18 +76,19 @@ export default function QuestionsPage() {
   };
 
   useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await axios.get("/api/questions");
+        setQuestions(res.data);
+        setFilteredCount(res.data.length);
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+        toast.error("Failed to fetch questions");
+      }
+    };
+  
     fetchQuestions();
   }, []);
-
-  const fetchQuestions = async () => {
-    try {
-      const res = await axios.get("/api/questions");
-      setQuestions(res.data);
-    } catch (error) {
-      console.error("Error fetching questions:", error);
-      toast.error("Failed to fetch questions");
-    }
-  };
 
   const handlePost = async () => {
     if (!session) {
@@ -307,6 +309,11 @@ export default function QuestionsPage() {
      {/* Right Column - Questions Feed */}
      <div className={styles.rightColumn}>
         <h1 className={styles.heading}>Recent Questions</h1>
+        {session?.user?.role === 'alumni' && (
+    <div className={styles.filterInfo}>
+      Showing {questions.length} questions matching your skills
+    </div>
+  )}
         {questions.map((q) => (
           <div key={q._id} className={styles.questionThread}>
             <div className={styles.voteColumn}>

@@ -9,7 +9,63 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
+// In your Signup component
+const handleResumeData = (data) => {
+  console.log('Received resume data:', data);
 
+  try {
+    // Extract username from name (firstname+lastname)
+    const username = data.name
+      ?.replace(/\s+/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '') || '';
+
+    // Update form data
+    setFormData(prev => ({
+      ...prev,
+      username,
+      email: data.email || prev.email,
+      profile: {
+        ...prev.profile,
+        college: {
+          ...prev.profile.college,
+          name: 'Lakshmi Narain College of Technology',
+          degree: 'B.Tech',
+          major: 'Computer Science',
+          graduationYear: 2026
+        },
+        company: {
+          ...prev.profile.company,
+          name: data.work_experience?.split(' at ')?.[1] || '',
+          position: data.work_experience?.split(' at ')?.[0] || ''
+        },
+        location: data.location || 'Bhopal, Madhya Pradesh',
+        skills: data.skills?.split(', ') || [],
+        bio: [
+          data.projects && `Projects: ${data.projects}`,
+          data.certifications && `Certifications: ${data.certifications}`,
+          data.work_experience && `Experience: ${data.work_experience}`
+        ].filter(Boolean).join('. '),
+        phone: data.phone || ''
+      }
+    }));
+
+    // Update selected skills
+    if (data.skills) {
+      setSelectedSkills(data.skills.split(', '));
+    }
+
+    // Show success message
+    toast.success('Resume data imported successfully!');
+
+  } catch (error) {
+    console.error('Error processing resume data:', error);
+    // Don't show error if we managed to fill some fields
+    if (!formData.email) {
+      toast.error('Some resume data could not be processed');
+    }
+  }
+};
   const { username, email, password, role, profile } = req.body;
 
   if (!username || !email || !password || !role || !profile?.college?.id) {

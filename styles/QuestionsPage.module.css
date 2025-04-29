@@ -333,3 +333,14 @@
   .replyForm { flex-direction: column; }
   .replyButton { width: 100%; }
 }
+.filterInfo {
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin: -10px 0 20px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

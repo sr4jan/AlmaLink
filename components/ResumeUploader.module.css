@@ -1,0 +1,176 @@
+.uploaderContainer {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .uploadLabel {
+    display: block;
+    cursor: pointer;
+  }
+  
+  .fileInput {
+    display: none;
+  }
+  
+  .uploadBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius-lg);
+    background: var(--bg-secondary);
+    transition: all 0.3s ease;
+  }
+  
+  .uploadBox:hover {
+    border-color: var(--primary);
+    background: var(--primary-transparent);
+  }
+  
+  .uploadIcon,
+  .fileIcon,
+  .loadingIcon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+  }
+  
+  .loadingIcon {
+    animation: spin 1s linear infinite;
+  }
+  
+  .error {
+    color: var(--error);
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--error);
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-md);
+    background-color: var(--error-transparent);
+    font-size: 0.875rem;
+  }
+  
+  .errorIcon {
+    font-size: 1rem;
+  }
+  
+  .loadingIcon {
+    animation: spin 1s linear infinite;
+  }
+  
+  .uploadBox.loading {
+    border-color: var(--primary);
+    background: var(--primary-transparent);
+  }
+  
+  .supportedFormats {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .progressText {
+    font-size: 0.875rem;
+    color: var(--primary);
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+  
+  .loading {
+    border-color: var(--primary);
+    background: var(--primary-transparent);
+  }
+  
+  .loadingIcon {
+    color: var(--primary);
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--error);
+    background: var(--error-transparent);
+    padding: 0.75rem;
+    border-radius: var(--border-radius-md);
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .supportedFormats {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+  }
+  
+  .uploadBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius-lg);
+    background: var(--bg-secondary);
+    transition: all 0.3s ease;
+  }
+  
+  .uploadBox:hover:not(.loading) {
+    border-color: var(--primary);
+    background: var(--primary-transparent);
+  }
+
+  .loadingState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .progressText {
+    font-size: 0.875rem;
+    color: var(--primary);
+    text-align: center;
+  }
+  
+  .loadingIcon {
+    color: var(--primary);
+    animation: spin 1s linear infinite;
+  }
+  
+  .error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--error);
+    background: var(--error-transparent);
+    padding: 0.75rem;
+    border-radius: var(--border-radius-md);
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }

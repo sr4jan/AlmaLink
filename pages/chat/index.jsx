@@ -237,21 +237,19 @@ export default function ChatPage() {
 
   // Function to render message status icon
   const renderMessageStatus = (message) => {
-    if (message.sender !== session?.user?.id) return null; // Only show status for sent messages
-
     if (message.status === 'sending') {
-      return <Check size={16} className={styles.sending} />; // Or a Clock icon
+      return <Check size={16} className={`${styles.statusIcon} ${styles.sending}`} />;
     }
     if (message.status === 'failed') {
-      return <span className={styles.errorIndicator}>!</span>; // Simple error indicator
+      return <span className={styles.errorIndicator}>!</span>;
     }
     if (message.read) {
-      return <CheckCheck size={16} className={styles.read} />;
+      return <CheckCheck size={16} className={`${styles.statusIcon} ${styles.read}`} />;
     }
-    if (message.status === 'sent' || message.delivered) { // Assuming 'sent' implies delivered for simplicity
-        return <Check size={16} className={styles.delivered} />;
+    if (message.status === 'sent' || message.delivered) {
+      return <Check size={16} className={`${styles.statusIcon} ${styles.delivered}`} />;
     }
-    return null; // Default if no status matches
+    return null;
   };
 
   return (
@@ -373,52 +371,54 @@ export default function ChatPage() {
                 <div className={styles.noMessages}>Start your conversation!</div>
               )}
               {!loadingMessages && messages.map((message, index) => {
-                 // Basic Date Divider Logic (can be improved)
-                 const showDateDivider = index === 0 ||
-                   new Date(messages[index - 1].createdAt).toDateString() !== new Date(message.createdAt).toDateString();
+  const showDateDivider = index === 0 ||
+    new Date(messages[index - 1].createdAt).toDateString() !== 
+    new Date(message.createdAt).toDateString();
+  
+  const isCurrentUser = message.sender === session?.user?.id;
 
-                return(
-                    <>
-                     {showDateDivider && (
-                        <div className={styles.dateDivider}>
-                           <span>{format(new Date(message.createdAt), 'eeee, MMMM d')}</span>
-                        </div>
-                     )}
-                      <div
-                        key={message._id || `msg-${index}`}
-                        className={`${styles.messageWrapper} ${
-                          message.sender === session?.user?.id ? styles.sent : styles.received
-                        }`}
-                      >
-                        <div className={styles.messageContent}>
-                          {message.content}
-                          {/* Basic Attachment Display */}
-                          {message.attachments?.map((attachment, i) => (
-                            <div key={i} className={styles.attachment}>
-                              {attachment.type?.startsWith('image') ? (
-                                <img src={attachment.url} alt={attachment.name || 'Attachment'} className={styles.attachmentImage} />
-                              ) : (
-                                <a href={attachment.url} target="_blank" rel="noopener noreferrer" className={styles.attachmentLink}>
-                                  <Paperclip size={14} />
-                                  <span>{attachment.name || 'Attached File'}</span>
-                                </a>
-                              )}
-                            </div>
-                          ))}
-                          <div className={styles.messageInfo}>
-                            <span className={styles.timestamp}>
-                              {formatTimestamp(message.createdAt)}
-                            </span>
-                            {/* Render status icon for sent messages */}
-                            {renderMessageStatus(message)}
-                          </div>
-                           {/* Placeholder for reactions */}
-                           {/* <div className={styles.reactions}>❤️ 😂 👍</div> */}
-                        </div>
-                      </div>
-                    </>
-                )
-                })}
+  return (
+    <div key={message._id || `msg-${index}`}>
+      {showDateDivider && (
+        <div className={styles.dateDivider}>
+          <span>{format(new Date(message.createdAt), 'eeee, MMMM d')}</span>
+        </div>
+      )}
+      <div className={`${styles.messageWrapper} ${isCurrentUser ? styles.sent : styles.received}`}>
+        <div className={styles.messageContent}>
+          {message.content}
+          {message.attachments?.map((attachment, i) => (
+            <div key={i} className={styles.attachment}>
+              {attachment.type?.startsWith('image') ? (
+                <img 
+                  src={attachment.url} 
+                  alt={attachment.name || 'Attachment'} 
+                  className={styles.attachmentImage}
+                />
+              ) : (
+                <a 
+                  href={attachment.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className={styles.attachmentLink}
+                >
+                  <Paperclip size={14} />
+                  <span>{attachment.name || 'Attached File'}</span>
+                </a>
+              )}
+            </div>
+          ))}
+          <div className={styles.messageInfo}>
+            <span className={styles.timestamp}>
+              {formatTimestamp(message.createdAt)}
+            </span>
+            {isCurrentUser && renderMessageStatus(message)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+})}
               <div ref={messagesEndRef} /> {/* Anchor for scrolling */}
             </div>
 
