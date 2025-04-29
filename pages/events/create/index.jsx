@@ -18,7 +18,6 @@ import {
   Info
 } from 'lucide-react';
 import styles from '@/styles/EventCreate.module.css';
-import { formatDateTime, getCurrentDateTime } from '@/utils/dateFormat';
 
 export default function CreateEventPage() {
   const router = useRouter();

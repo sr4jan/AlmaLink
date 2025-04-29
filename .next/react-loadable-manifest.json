@@ -1,20 +1,21 @@
 {
   "node_modules\\next\\dist\\client\\index.js -> ../pages/_app": {
-    "id": "node_modules\\next\\dist\\client\\index.js -> ../pages/_app",
+    "id": 57,
     "files": [
-      "static/chunks/_pages-dir-browser_node_modules_next_dist_pages__app_js.js"
+      "static/chunks/57.268c8c590d7f2802.js"
     ]
   },
   "node_modules\\next\\dist\\client\\index.js -> ../pages/_error": {
-    "id": "node_modules\\next\\dist\\client\\index.js -> ../pages/_error",
+    "id": 4100,
     "files": [
-      "static/chunks/_pages-dir-browser_node_modules_next_dist_pages__error_js.js"
+      "static/chunks/100.a7fe8feab6f20629.js"
     ]
   },
   "pages\\_app.js -> @/components/AiChatBubble": {
-    "id": "pages\\_app.js -> @/components/AiChatBubble",
+    "id": 5440,
     "files": [
-      "static/chunks/_pages-dir-browser_components_AiChatBubble_jsx.js"
+      "static/css/1f7567531cd96960.css",
+      "static/chunks/440.7bebff564ceca4dd.js"
     ]
   }
 }

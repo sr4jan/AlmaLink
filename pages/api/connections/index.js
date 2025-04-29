@@ -37,7 +37,7 @@ export default function ConnectionsPage() {
     if (status === "authenticated") {
       fetchConnections(activeTab);
     }
-  }, [status, activeTab]);
+  }, [status, activeTab, router]);
 
   const fetchConnections = async (filter) => {
     try {

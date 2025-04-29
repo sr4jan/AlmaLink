@@ -20,7 +20,6 @@ import {
   Tag
 } from 'lucide-react';
 import styles from '@/styles/Events.module.css';
-import { formatDisplayDate } from '@/utils/dateFormat';
 
 export default function EventsPage() {
   const router = useRouter();
