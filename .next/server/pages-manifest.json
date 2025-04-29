@@ -2,8 +2,10 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/chat": "pages/chat.js",
+  "/connections": "pages/connections.js",
   "/": "pages/index.js",
+  "/chat": "pages/chat.js",
   "/api/auth/[...nextauth]": "pages/api/auth/[...nextauth].js",
-  "/connections": "pages/connections.js"
+  "/api/profile": "pages/api/profile.js",
+  "/dashboard/profile": "pages/dashboard/profile.js"
 }

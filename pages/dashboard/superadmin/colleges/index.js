@@ -1,7 +1,7 @@
 import connectDB from '@/lib/mongodb';
 import College from '@/models/College';
 import { getServerSession } from "next-auth/next";
-import { authOptions } from '../../../auth/[...nextauth]';
+import { authOptions } from '../../../api/auth/[...nextauth]';
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
