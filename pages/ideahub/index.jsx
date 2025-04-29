@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { MessageCircle, X, ExternalLink, ChevronRight, Trash2, Edit2, ThumbsUp, Share2, Clock } from 'lucide-react';
 import Link from 'next/link';
-import styles from '@/styles/Ideahub.module.css';
+import styles from '@/styles/IdeaHub.module.css';
 
 export default function IdeaHubPage() {
   const { data: session } = useSession();

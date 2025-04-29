@@ -4,7 +4,7 @@ import Link from 'next/link';
 // Assuming these are components you have:
 import ParticlesBackground from '@/components/ParticlesBackground';
 import { AnimatedBackground } from '@/components/AnimatedBackground';
-import styles from '/styles/Home.module.css'; // Ensure path is correct
+import styles from '@/styles/Home.module.css'; // Ensure path is correct
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Users, Award, Zap, MessageSquare, Star } from 'lucide-react'; // Relevant icons
 
 
