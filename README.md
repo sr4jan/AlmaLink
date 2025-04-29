@@ -2,90 +2,155 @@
 
 > The Future of Campus Connectivity - Bridging Students and Alumni through AI-Powered Networking
 
----
+🔗 **Live Site**: [https://alma-link-sr4jans-projects.vercel.app/](https://alma-link-sr4jans-projects.vercel.app/)  
+📱 **Best viewed on desktop**
 
-## 🚀 Overview
+## 🚫 Important Notice
 
-AlmaLink is an intelligent ecosystem that transforms how students and alumni interact, support, and grow together. By leveraging AI, automation, real-time collaboration, and community-driven features, AlmaLink redefines campus connectivity and empowers users across roles.
+**PROPRIETARY SOFTWARE - ALL RIGHTS RESERVED**
 
-## 🔐 Key Features
+This software and its source code are proprietary and confidential. Unauthorized copying, transferring, or reproduction of this software, via any medium is strictly prohibited. This software is owned by Srajan Soni and protected by copyright law and trade secret law.
 
-### Smart Authentication & Role Management
-- **Signup with Resume Upload**: Alumni and students upload resumes for instant profile creation using an AI-powered parser (SpaCy + Regex).
+Last Updated: 2025-04-29 17:42:45 UTC
+
+## 🌐 Overview
+
+AlmaLink is an intelligent ecosystem transforming how students and alumni interact, support, and grow together. By leveraging AI, automation, real-time collaboration, and community-driven features, AlmaLink redefines campus connectivity.
+
+## ✨ Key Features
+
+### 🔐 Smart Authentication & Role Management
+
+- **Signup with Resume Upload**: 
+  - Upload resume for instant profile creation
+  - AI-powered parser extracts key information
+  - Auto-fills user profile with precision
+
 - **Intelligent Role Assignment**:
-  - 🧑‍🎓 **Student**: Post ideas, participate in Q&A, and apply for jobs.
-  - 🎓 **Alumni**: Fund ideas, answer questions, and post job opportunities.
-  - 🛡️ **Admin**: Manage college-specific content and oversight.
-  - 👑 **Superadmin**: Root-level control and admin creation.
-- **Security**:
-  - JWT authentication with NextAuth.js
-  - Bcrypt password hashing
-  - Automatic session expiration and management
-  - XSS/CSRF protection and rate limiting
+  - 🧑‍🎓 **Student**: Access to idea posting, Q&A, job applications
+  - 🎓 **Alumni**: Fund ideas, answer questions, post jobs
+  - 🛡️ **Admin**: College-specific management
+  - 👑 **Superadmin**: Root-level access, admin creation
 
-### Dynamic Homepage
+- **Security**:
+  - JWT authentication
+  - Bcrypt password encryption
+  - Automatic session management
+
+### 🏠 Dynamic Homepage
+
 - Personalized role-based navigation
 - Dark/Light mode toggle
-- Smart sidebar with real-time info, profile picture upload, and resume-extracted data
-- Alumni Success Stories showcase
-- Built-in AI Assistant (Reyn)
+- Smart sidebar with:
+  - Profile picture upload
+  - Real-time info sync
+  - Resume-extracted data
+- Alumni Success Stories section
+- Built-in AI Assistant
 
-### Multi-Level Dashboards
-- **Student Dashboard**: Submission tracking, response monitoring, engagement analytics
-- **Alumni Dashboard**: Q&A activity metrics, funded ideas tracking, session management
-- **Admin Dashboard**: User control panel, event approvals, analytics reports
-- **Superadmin Dashboard**: Institution oversight, admin management, system controls
+### 📊 Multi-Level Dashboards
 
-### Core Modules
+- 📈 **Student Dashboard**
+  - Submission tracking
+  - Response monitoring
+  - Engagement analytics
 
-#### IdeaHub
-- Student idea submissions with detailed project showcases
-- Alumni funding and tag-based filtering
+- 🎓 **Alumni Dashboard**
+  - Q&A activity metrics
+  - Funded ideas tracking
+  - Session management
 
-#### Question Forum
-- ML-categorized questions (Real-time classification via FastAPI)
-- Skill-based routing and smart answer matching
-- Topic organization and tag generation
+- 🛡️ **Admin Dashboard**
+  - User control panel
+  - Event approvals
+  - Analytics reports
 
-#### Job & Internship Portal
+- 🚀 **Superadmin Dashboard**
+  - Institution oversight
+  - Admin management
+  - System controls
+
+### 🚀 Core Features
+
+#### 💡 IdeaHub – Innovation Meets Funding
+- Student idea submissions
+- Alumni funding platform
+- Detailed project showcases
+- Tag-based filtering
+
+#### ❓ Question Forum – Knowledge Matching Engine
+- ML-categorized questions
+- Skill-based routing
+- Smart answer matching
+- Topic organization
+
+#### 💼 Job & Internship Portal
 - Alumni job postings
-- Student applications with skill matching algorithm
-- Application tracking and notifications
+- Student applications
+- Skill matching algorithm
+- Application tracking
 
-#### Events Hub
-- Event creation and RSVPs
+#### 🎓 Events Hub
+- College event management
 - Alumni meet coordination
+- RSVP system
 - Calendar integration
 
-#### Live Webinars
-- Real-time webinars (future Socket.IO integration)
-- Interactive Q&A and recording capabilities
-- Session analytics dashboard
+#### 📺 Live Webinars
+- Real-time sessions
+- Interactive Q&A
+- Recording capabilities
+- Session analytics
 
-#### Connections & Chat
-- Auto-college linking and mentorship matching
-- **Planned real-time chat via Socket.IO**
+#### 🔗 Connections
+- Auto-college linking
+- Real-time chat *(coming soon)*
+- Profile cards
+- Mentorship matching
 
-#### Donation Portal
-- Idea funding, event sponsorship, and scholarship programs
-- Transaction tracking and reporting
+#### 💬 Chatbox
+- *(Planned: Socket.IO integration for messaging)*
+- Encrypted messaging *(coming soon)*
+- File sharing *(coming soon)*
 
-## 🧠 AI & ML Integration
+#### 💰 Donation Portal
+- Idea funding
+- Event sponsorship
+- Scholarship programs
+- Transaction tracking
 
-- **APIs & Deployment**:
-  - ML models are exposed as FastAPI endpoints and deployed on Render.
-  - Resume-extractor API: https://github.com/sr4jan/resume-extractor-api
-  - Question-classifier API: https://github.com/sr4jan/question-classifier-backend
+## 🧠 AI + ML Integration
 
-- **Resume Parser**: SpaCy + Regex for extraction of name, email, phone, GitHub, LinkedIn, skills
-- **Skill Classifier**: Scikit-learn model trained on multi-class technical dataset (~400 questions/category)
-- **Question Categorizer**: FastAPI-based real-time classification and routing
+### 🧾 Resume Parser
+- SpaCy + Regex extraction
+- Multi-format support
+- Accuracy validation
+- Data structuring
+- 🔗 [GitHub Repo](https://github.com/sr4jan/resume-extractor-api)
+
+### 🎯 Skill Classifier
+- ML-based prediction
+- Training data integration
+- Continuous learning
+- Accuracy metrics
+
+### ❓ Question Categorizer
+- Instant classification
+- Topic modeling
+- Tag generation
+- Routing logic
+- 🔗 [GitHub Repo](https://github.com/sr4jan/question-classifier-backend)
+
+### ⚙️ Model Deployment
+- FastAPI endpoints
+- Hosted on Render
+- Load balancing
+- Error handling
 
 ## 💻 Technical Architecture
 
-### Frontend
-```javascript
-// Tech Stack
+### 🚀 Frontend
+```typescript
 const frontend = {
   framework: "Next.js v15",
   core: "React v19",
@@ -94,36 +159,33 @@ const frontend = {
   state: ["Context API", "Headless UI"],
   styling: "CSS Modules with animations",
   networking: "Axios",
-  parsers: ["pdf-parse", "pdf2json", "mammoth"],
-  realtime: "(planned) Socket.IO",
-  storage: "(planned) Cloudinary"
+  parsers: ["pdf-parse", "pdf2json", "mammoth"]
 };
 ```
 
-### Backend
-```python
-# Tech Configuration
-backend = {
-    "framework": "FastAPI",
-    "server": "Uvicorn",
-    "ml_stack": [
-        "scikit-learn",
-        "pandas",
-        "numpy",
-        "spaCy",
-        "nltk"
-    ],
-    "deployment": "Render",
-    "apis": [
-        "Resume Parsing",
-        "Skill Prediction",
-        "Question Classification"
-    ]
-}
+### ⚙️ Backend
+```js
+const backend = {
+  framework: "FastAPI",
+  server: "Uvicorn",
+  ml_stack: [
+    "scikit-learn",
+    "pandas",
+    "numpy",
+    "spaCy",
+    "nltk"
+  ],
+  deployment: "Render",
+  apis: [
+    "Resume Parsing",
+    "Skill Prediction",
+    "Question Classification"
+  ]
+};
 ```
 
-### Database
-```javascript
+### 🗄️ Database
+```js
 const database = {
   platform: "MongoDB Atlas",
   odm: "Mongoose",
@@ -139,52 +201,54 @@ const database = {
 };
 ```
 
-### Security Implementation
-- Bcrypt password encryption
-- JWT-based session management
-- Role-Based Access Control (RBAC)
-- Protected API routes
-- Data encryption at rest and in transit
-- XSS and CSRF prevention
-- Rate limiting and audit logging
+### 🔒 Security Implementation
+- Password Encryption (Bcrypt)
+- JWT Session Management
+- Role-Based Access Control
+- Protected API Routes
+- Data Encryption
+- XSS Protection
+- CSRF Prevention
+- Rate Limiting
 
-## 📁 Project Structure
+## 🌟 Unique Value Proposition
+✅ AI-Powered Onboarding  
+✅ Smart Role Management  
+✅ Intelligent Q&A Routing  
+✅ Direct Fundraising Platform  
+✅ Automated College Ecosystem  
+✅ Enterprise-Grade Security
 
+## 👤 Author & Rights
+**Srajan Soni**  
+3rd Year, B.Tech in Computer Science & Engineering  
+Lakshmi Narain College of Technology, Bhopal  
+[GitHub](https://github.com/sr4jan)  
+[LinkedIn](https://linkedin.com/in/sr4jan)
+
+## ⚖️ Legal
+CONFIDENTIAL & PROPRIETARY
+
+© 2025 Srajan Soni. All Rights Reserved.
+
+This software is proprietary and confidential. No part of this software may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of the owner, except in the case of brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.
+
+For permission requests, write to the owner at the address below:  
+MONGODB_URI=your_mongodb_uri  
+NEXTAUTH_SECRET=your_secret  
+ML_API_URL=your_ml_api_url
+
+## 🗂️ Folder Structure
 ```
 almalink/
-├── components/      # Reusable React components
-├── pages/           # Next.js page routes
+├── components/      # React components
+├── pages/           # Next.js pages
 ├── public/          # Static assets
-├── styles/          # CSS modules & animations
-├── lib/             # Utility functions and API clients
-├── models/          # Mongoose schemas
-└── ml/              # Machine learning modules and models
+├── styles/          # CSS modules with animations
+├── lib/             # Utility functions
+├── models/          # MongoDB schemas
+└── ml/              # Machine learning modules
 ```
 
-## ⚙️ Environment Variables
-
-Create a `.env.local` file in the root directory with the following:
-```
-MONGODB_URI=your_mongodb_uri
-NEXTAUTH_SECRET=your_secret
-ML_API_URL=https://your-render-app-url.com
-```
-
-## 🚧 Future Enhancements
-- Real-time chat integration with Socket.IO
-- Media storage via Cloudinary
-
-## 📄 License & Legal
-
-> **PROPRIETARY SOFTWARE - ALL RIGHTS RESERVED**
-
-This software and its source code are proprietary and confidential. Unauthorized copying, transferring, or reproduction of this software, via any medium is strictly prohibited. This software is owned by **Srajan Soni** and protected by copyright and trade secret laws.
-
-Last Updated: 2025-04-29 17:42:45 UTC
-
-For permission requests, contact the owner at:
-
-- **Email**: srajansoni2004@gmail.com
-
-© 2025 Srajan Soni. All rights reserved.
+*Future enhancements: Cloudinary integration, real-time chat via Socket.IO, OpenAI API integration in chatbot*
 
