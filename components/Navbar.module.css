@@ -274,3 +274,293 @@
 .navItem:hover .icon {
   animation: floatIcon 0.6s ease-in-out;
 }
+/* Keep your existing styles and add/modify these: */
+
+/* Mobile Navigation Styles */
+.mobileNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--nav-bg);
+  border-top: 1px solid var(--nav-border);
+  padding: 0.25rem 1rem;
+  padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
+  z-index: 1000;
+  backdrop-filter: blur(var(--nav-blur));
+  -webkit-backdrop-filter: blur(var(--nav-blur));
+  height: 56px; /* Reduced height */
+  box-shadow: 0 -4px 16px var(--nav-shadow);
+}
+
+.mobileNavContainer {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 0.5rem;
+  padding: 0 1.5rem; /* Space for arrows */
+  position: relative;
+  height: 100%;
+  align-items: center;
+}
+
+.mobileNavItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px; /* Smaller minimum width */
+  padding: 0.25rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 2px;
+  flex-shrink: 0;
+}
+.mobileNavContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.mobileNavItem:active {
+  transform: scale(0.95);
+}
+
+.mobileIcon {
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobileLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.mobileNavItem:hover,
+.mobileNavItem:focus {
+  color: var(--primary);
+}
+
+.mobileNavItem:hover .mobileIcon,
+.mobileNavItem:focus .mobileIcon {
+  transform: translateY(-2px);
+}
+
+/* Active State for Mobile Nav */
+.mobileNavItem[aria-current="page"] {
+  color: var(--primary);
+}
+
+.mobileNavItem[aria-current="page"] .mobileIcon {
+  transform: translateY(-2px);
+}
+
+/* Modify existing navbar styles for mobile */
+@media (max-width: 768px) {
+  .navbar {
+    top: 0;
+    width: 100%;
+    border-radius: 0;
+    height: 60px;
+  }
+
+  .navContent {
+    padding: 0 1rem;
+  }
+
+  .navigationWrapper {
+    display: none; /* Hide desktop navigation on mobile */
+  }
+
+  
+
+  .logo a {
+    font-size: 1.25rem;
+  }
+
+  .rightSection {
+    gap: 0.5rem;
+  }
+
+  .profileButton,
+  .themeToggleBtn {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Enhanced mobile navigation animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mobileNav {
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active indicator for mobile nav */
+.mobileNavItem::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.mobileNavItem[aria-current="page"]::after {
+  width: 20px;
+}
+
+/* Enhanced hover effects for mobile */
+.mobileNavItem:hover {
+  background: var(--nav-hover);
+}
+
+/* Add glass effect to mobile nav */
+
+/* Safe area handling for notched devices */
+@supports (padding: max(0px)) {
+  .mobileNav {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+
+
+/* Add glass effect to navbar */
+.navbar {
+  background: var(--nav-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Enhanced accessibility */
+.mobileNavItem:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.mobileIcon {
+  font-size: 18px; /* Smaller icons */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobileLabel {
+  font-size: 0.65rem; /* Reduced font size */
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Scroll Arrows */
+.scrollArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--nav-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.scrollLeft {
+  left: 0;
+}
+
+.scrollRight {
+  right: 0;
+}
+
+.scrollArrow:hover {
+  background: var(--primary-transparent);
+  color: var(--primary);
+}
+/* Show/hide scroll arrows based on scroll position */
+/* Active State */
+.mobileNavItem[aria-current="page"] {
+  color: var(--primary);
+}
+
+.mobileNavItem[aria-current="page"] .mobileIcon {
+  transform: translateY(-1px);
+}
+
+/* Hover Effects */
+.mobileNavItem:hover {
+  color: var(--primary);
+}
+
+.mobileNavItem:hover .mobileIcon {
+  transform: translateY(-1px);
+}
+
+/* Safe Area Adjustments */
+@supports (padding: max(0px)) {
+  .mobileNav {
+    padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Enhanced shadow and glass effect */
+.mobileNav {
+  background: var(--nav-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 
+    0 -4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 -2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Gradient fade effect for scroll indicators */
+.mobileNav::before,
+.mobileNav::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.mobileNav::before {
+  left: 0;
+  background: linear-gradient(to right, var(--nav-bg) 0%, transparent 100%);
+}
+
+.mobileNav::after {
+  right: 0;
+  background: linear-gradient(to left, var(--nav-bg) 0%, transparent 100%);
+}

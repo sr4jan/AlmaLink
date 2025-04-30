@@ -233,3 +233,16 @@ input:focus, select:focus, textarea:focus {
   --modal-border: rgba(255, 255, 255, 0.05);
   --card-bg: rgba(21, 28, 44, 0.5);
 }
+/* Add smooth scrolling to page */
+:global(html) {
+  scroll-behavior: smooth;
+}
+
+/* Prevent content shift when switching between mobile/desktop */
+:global(body) {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+/* Adjust main content padding to account for bottom nav */
+:global(main) {
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+}

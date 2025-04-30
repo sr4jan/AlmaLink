@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSession } from "next-auth/react";
 import { useTheme } from '@/contexts/ThemeContext';
 import styles from './Navbar.module.css';
@@ -20,7 +20,10 @@ import {
   Settings,
   School,
   GraduationCap,
-  BookOpen
+  BookOpen,
+  Menu,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 const NAV_LINKS = {
@@ -65,14 +68,51 @@ const NAV_LINKS = {
 
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session, status } = useSession();
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const scrollContainerRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScrollButtons = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
+    }
+  };
+  
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 200;
+      const newScrollLeft = scrollContainerRef.current.scrollLeft + 
+        (direction === 'left' ? -scrollAmount : scrollAmount);
+      
+      scrollContainerRef.current.scrollTo({
+        left: newScrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+
+    // Initial checks
+    handleResize();
+    handleScroll();
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const getNavLinks = () => {
@@ -81,49 +121,46 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`${styles.navbar} ${isScrolled ? styles.scrolled : ''}`}>
-      <div className={styles.navContent}>
-        {/* Logo Section */}
-        <div className={styles.logo}>
-          <Link href="/">AlmaLink</Link>
-        </div>
-
-        {/* Main Navigation */}
-        {status === "authenticated" && (
-          <div className={styles.navigationWrapper}>
-            <div className={styles.navigationContainer}>
-              {getNavLinks().map((link) => {
-                const Icon = link.icon;
-                return (
-                  <Link 
-                    key={link.href} 
-                    href={link.href} 
-                    className={styles.navItem}
-                  >
-                    <Icon size={20} className={styles.icon} />
-                    <span className={styles.label}>{link.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
+    <>
+      <nav className={`${styles.navbar} ${isScrolled ? styles.scrolled : ''}`}>
+        <div className={styles.navContent}>
+          {/* Logo Section */}
+          <div className={styles.logo}>
+            <Link href="/">AlmaLink</Link>
           </div>
-        )}
 
-        {/* Right Section */}
-        <div className={styles.rightSection}>
-        <button 
-                onClick={toggleTheme} 
-                className={styles.themeToggleBtn}
-                aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-              >
-                {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-              </button>
-          {status === "authenticated" ? (
-            <>
-              {/* Theme Toggle */}
-              
+          {/* Desktop Navigation */}
+          {status === "authenticated" && !isMobile && (
+            <div className={styles.navigationWrapper}>
+              <div className={styles.navigationContainer}>
+                {getNavLinks().map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <Link 
+                      key={link.href} 
+                      href={link.href} 
+                      className={styles.navItem}
+                    >
+                      <Icon size={20} className={styles.icon} />
+                      <span className={styles.label}>{link.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
-              {/* Profile Button */}
+          {/* Right Section */}
+          <div className={styles.rightSection}>
+            <button 
+              onClick={toggleTheme} 
+              className={styles.themeToggleBtn}
+              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
+
+            {status === "authenticated" ? (
               <button 
                 className={styles.profileButton}
                 onClick={() => setIsSidebarOpen(true)}
@@ -140,19 +177,64 @@ export default function Navbar() {
                   </div>
                 )}
               </button>
-            </>
-          ) : (
-            <div className={styles.authButtons}>
-              <Link href="/auth/login" className={styles.loginBtn}>
-                Login
-              </Link>
-              <Link href="/auth/signup" className={styles.signupBtn}>
-                Sign up
-              </Link>
-            </div>
-          )}
+            ) : (
+              <div className={styles.authButtons}>
+                <Link href="/auth/login" className={styles.loginBtn}>
+                  Login
+                </Link>
+                <Link href="/auth/signup" className={styles.signupBtn}>
+                  Sign up
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </nav>
+
+      {/* Mobile Bottom Navigation */}
+{status === "authenticated" && isMobile && (
+  <div className={styles.mobileNav}>
+    <div 
+      className={styles.mobileNavContainer}
+      ref={scrollContainerRef}
+      onScroll={checkScrollButtons}
+    >
+      {canScrollLeft && (
+        <button
+          className={`${styles.scrollArrow} ${styles.scrollLeft}`}
+          onClick={() => scroll('left')}
+          aria-label="Scroll left"
+        >
+          <ChevronLeft size={16} />
+        </button>
+      )}
+      
+      {getNavLinks().map((link) => {
+        const Icon = link.icon;
+        return (
+          <Link 
+            key={link.href} 
+            href={link.href} 
+            className={styles.mobileNavItem}
+          >
+            <Icon size={20} className={styles.mobileIcon} />
+            <span className={styles.mobileLabel}>{link.label}</span>
+          </Link>
+        );
+      })}
+
+      {canScrollRight && (
+        <button
+          className={`${styles.scrollArrow} ${styles.scrollRight}`}
+          onClick={() => scroll('right')}
+          aria-label="Scroll right"
+        >
+          <ChevronRight size={16} />
+        </button>
+      )}
+    </div>
+  </div>
+)}
 
       <ProfileSidebar
         isOpen={isSidebarOpen}
@@ -161,6 +243,6 @@ export default function Navbar() {
         toggleTheme={toggleTheme}
         session={session}
       />
-    </nav>
+    </>
   );
 }
