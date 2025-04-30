@@ -80,6 +80,10 @@ export default function Navbar() {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
+  const handleChatToggle = () => {
+    setIsChatOpen(prev => !prev);
+  };
+
   const checkScrollButtons = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
@@ -156,11 +160,11 @@ export default function Navbar() {
           {/* Right Section */}
           <div className={styles.rightSection}>
           <button 
-    onClick={() => setIsChatOpen(true)} 
-    className={styles.aiChatBtn}
-    aria-label="Open AI Chat"
+          onClick={handleChatToggle}
+          className={`${styles.aiChatBtn} ${isChatOpen ? styles.active : ''}`}
+          aria-label="Toggle AI Chat"
   >
-    <Bot size={18} className={styles.aiIcon} />
+    <Bot size={30} className={styles.aiIcon} />
   </button>
             <button 
               onClick={toggleTheme} 

@@ -13,7 +13,18 @@ export default function AiChatBubble({isVisible, setIsVisible}) {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
+  
+  // Add cleanup on unmount
+  useEffect(() => {
+    return () => {
+      setMessages([]);
+      setInputMessage('');
+    };
+  }, []);
+  const handleClose = () => {
+    setMessages([]);
+    onClose();
+  };
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -164,32 +175,28 @@ export default function AiChatBubble({isVisible, setIsVisible}) {
       {/* Chat Window */}
       {isVisible && (
         <div className={styles.chatWindow}>
-          {/* Chat Header */}
-          <div className={styles.chatHeader}>
-            <div className={styles.headerInfo}>
-              <Bot size={20} />
-              <span>Reyn AI Assistant</span>
-            </div>
-            <div className={styles.headerActions}>
-              <button 
-                onClick={() => setIsVisible(false)} 
-                className={styles.headerButton}
-                aria-label="Minimize chat"
-              >
-                <Minimize2 size={18} />
-              </button>
-              <button 
-                onClick={() => {
-                  setIsVisible(false);
-                  setMessages([]);
-                }} 
-                className={styles.headerButton}
-                aria-label="Close chat"
-              >
-                <X size={18} />
-              </button>
-            </div>
+        <div className={styles.chatHeader}>
+          <div className={styles.headerInfo}>
+            <Bot size={20} />
+            <span>Reyn AI Assistant</span>
           </div>
+          <div className={styles.headerActions}>
+            <button 
+              onClick={() => onClose()}
+              className={styles.headerButton}
+              aria-label="Minimize chat"
+            >
+              <Minimize2 size={18} />
+            </button>
+            <button 
+              onClick={() => setIsVisible(false)}
+              className={styles.headerButton}
+              aria-label="Close chat"
+            >
+              <X size={18} />
+            </button>
+          </div>
+        </div>
 
           {/* Chat Messages */}
           <div className={styles.messagesContainer}>
