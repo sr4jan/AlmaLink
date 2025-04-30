@@ -156,7 +156,7 @@ export default function Navbar() {
           {/* Right Section */}
           <div className={styles.rightSection}>
           <button 
-    onClick={() => setIsOpen(true)} 
+    onClick={() => setIsChatOpen(true)} 
     className={styles.aiChatBtn}
     aria-label="Open AI Chat"
   >
