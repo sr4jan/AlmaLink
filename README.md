@@ -2,8 +2,7 @@
 
 > The Future of Campus Connectivity - Bridging Students and Alumni through AI-Powered Networking
 
-🔗 **Live Site**: [https://alma-link-sr4jans-projects.vercel.app/](https://alma-link-sr4jans-projects.vercel.app/)  
-📱 **Best viewed on desktop**
+🔗 **Live Site**: [https://alma-link.vercel.app/](https://alma-link.vercel.app/)  
 
 ## 🚫 Important Notice
 
@@ -233,7 +232,9 @@ CONFIDENTIAL & PROPRIETARY
 
 This software is proprietary and confidential. No part of this software may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of the owner, except in the case of brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.
 
-For permission requests, write to the owner at the address below:  
+For permission requests, write to the owner at the e-mail address below:  
+srajansoni2004@gmail.com
+
 MONGODB_URI=your_mongodb_uri  
 NEXTAUTH_SECRET=your_secret  
 ML_API_URL=your_ml_api_url
