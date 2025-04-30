@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useTheme } from '@/contexts/ThemeContext';
 import styles from './Navbar.module.css';
 import ProfileSidebar from './ProfileSidebar';
+import AiChatBubble from './AiChatBubble';
 import { 
   Home,
   LayoutDashboard,
@@ -23,7 +24,8 @@ import {
   BookOpen,
   Menu,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Bot
 } from 'lucide-react';
 
 const NAV_LINKS = {
@@ -67,6 +69,7 @@ const NAV_LINKS = {
 };
 
 export default function Navbar() {
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session, status } = useSession();
@@ -152,6 +155,13 @@ export default function Navbar() {
 
           {/* Right Section */}
           <div className={styles.rightSection}>
+          <button 
+    onClick={() => setIsOpen(true)} 
+    className={styles.aiChatBtn}
+    aria-label="Open AI Chat"
+  >
+    <Bot size={18} className={styles.aiIcon} />
+  </button>
             <button 
               onClick={toggleTheme} 
               className={styles.themeToggleBtn}
@@ -235,7 +245,12 @@ export default function Navbar() {
     </div>
   </div>
 )}
-
+      
+      {/* AI Chat Component */}
+      <AiChatBubble 
+        isVisible={isChatOpen}
+        setIsVisible={setIsChatOpen}
+      />
       <ProfileSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}

@@ -3,8 +3,8 @@ import { useState, useRef, useEffect } from 'react';
 import { Bot, X, Send, Minimize2, MessageSquare } from 'lucide-react';
 import styles from '@/styles/AiChatBubble.module.css';
 
-export default function AiChatBubble() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function AiChatBubble({isVisible, setIsVisible}) {
+  
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -161,17 +161,8 @@ export default function AiChatBubble() {
 
   return (
     <>
-      {/* Chat Bubble Button */}
-      <button 
-        className={`${styles.chatBubble} ${isOpen ? styles.hidden : ''}`}
-        onClick={() => setIsOpen(true)}
-        aria-label="Open AI Chat"
-      >
-        <Bot size={24} />
-      </button>
-
       {/* Chat Window */}
-      {isOpen && (
+      {isVisible && (
         <div className={styles.chatWindow}>
           {/* Chat Header */}
           <div className={styles.chatHeader}>
@@ -181,7 +172,7 @@ export default function AiChatBubble() {
             </div>
             <div className={styles.headerActions}>
               <button 
-                onClick={() => setIsOpen(false)} 
+                onClick={() => setIsVisible(false)} 
                 className={styles.headerButton}
                 aria-label="Minimize chat"
               >
@@ -189,7 +180,7 @@ export default function AiChatBubble() {
               </button>
               <button 
                 onClick={() => {
-                  setIsOpen(false);
+                  setIsVisible(false);
                   setMessages([]);
                 }} 
                 className={styles.headerButton}

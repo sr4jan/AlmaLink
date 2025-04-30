@@ -28,20 +28,20 @@
   
   .chatWindow {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 360px;
-    height: 560px;
-    background: rgba(var(--bg-primary-rgb), 0.95); /* Add transparency to background */
-    backdrop-filter: blur(8px); /* Adds frosted glass effect */
-    -webkit-backdrop-filter: blur(8px); /* For Safari */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+    bottom: 80px; /* Adjust based on your needs */
+    right: 20px;
+    width: 380px;
+    max-width: calc(100vw - 40px);
+    height: 600px;
+    max-height: calc(100vh - 120px);
+    background: var(--bg-elevated);
     border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px var(--nav-shadow);
     display: flex;
     flex-direction: column;
-    z-index: 1000;
-    animation: slideIn 0.3s ease;
+    z-index: 999;
+    animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--nav-border);
   }
   
   @keyframes slideIn {

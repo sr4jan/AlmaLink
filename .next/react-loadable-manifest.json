@@ -13,8 +13,6 @@
   },
   "pages\\_app.js -> @/components/AiChatBubble": {
     "id": "pages\\_app.js -> @/components/AiChatBubble",
-    "files": [
-      "static/chunks/_pages-dir-browser_components_AiChatBubble_jsx.js"
-    ]
+    "files": []
   }
 }
