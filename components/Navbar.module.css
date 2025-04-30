@@ -182,7 +182,8 @@
 /* Auth Buttons */
 .authButtons {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .loginBtn,
@@ -238,10 +239,6 @@
   .logo a {
     font-size: 1.25rem;
   }
-
-  .authButtons .loginBtn {
-    display: none;
-  }
 }
 
 @media (max-width: 480px) {
@@ -255,6 +252,35 @@
 
   .navItem {
     padding: 0.5rem;
+  }
+  .authButtons {
+    gap: 0.35rem; /* Reduced gap for mobile */
+  }
+
+  .authButtons {
+    gap: 0.25rem;
+  }
+
+  .loginBtn,
+  .signupBtn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  .mobileNav {
+    height: 52px; /* Slightly smaller on very small screens */
+  }
+
+  .mobileNavItem {
+    min-width: 44px;
+    padding: 0.25rem;
+  }
+
+  .mobileIcon {
+    font-size: 15px;
+  }
+
+  .mobileLabel {
+    font-size: 0.6rem;
   }
 }
 
@@ -284,27 +310,29 @@
   right: 0;
   background: var(--nav-bg);
   border-top: 1px solid var(--nav-border);
-  padding: 0.25rem 1rem;
-  padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0;
+  padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
   z-index: 1000;
-  backdrop-filter: blur(var(--nav-blur));
-  -webkit-backdrop-filter: blur(var(--nav-blur));
-  height: 56px; /* Reduced height */
-  box-shadow: 0 -4px 16px var(--nav-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  height: 56px;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .mobileNavContainer {
+  position: relative;
   display: flex;
   overflow-x: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  gap: 0.5rem;
-  padding: 0 1.5rem; /* Space for arrows */
-  position: relative;
+  gap: 0.75rem;
+  padding: 0 2rem; /* Increased padding for arrows */
   height: 100%;
   align-items: center;
+  margin: 0 auto;
+  max-width: 100%;
 }
 
 .mobileNavItem {
@@ -312,13 +340,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 52px; /* Smaller minimum width */
-  padding: 0.25rem;
+  min-width: 48px;
+  height: 100%;
+  padding: 0.25rem 0.5rem;
   color: var(--text-secondary);
   text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  gap: 2px;
+  transition: all 0.3s ease;
   flex-shrink: 0;
 }
 .mobileNavContainer::-webkit-scrollbar {
@@ -332,13 +359,16 @@
 .mobileIcon {
   position: relative;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 16px;
+  margin-bottom: 2px;
 }
 
 .mobileLabel {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   font-weight: 500;
   text-align: center;
   transition: color 0.3s ease;
+  white-space: nowrap;
 }
 
 .mobileNavItem:hover,
@@ -377,8 +407,19 @@
     display: none; /* Hide desktop navigation on mobile */
   }
 
-  
+  .authButtons {
+    gap: 0.35rem; /* Reduced gap for mobile */
+  }
 
+  .loginBtn,
+  .signupBtn {
+    display: inline-flex; /* Ensure buttons are always visible */
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    align-items: center;
+    justify-content: center;
+    min-width: auto;
+  }
   .logo a {
     font-size: 1.25rem;
   }
@@ -480,8 +521,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   background: var(--bg-elevated);
   border: 1px solid var(--nav-border);
   border-radius: 50%;
@@ -489,18 +530,18 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 2;
+  z-index: 3;
   color: var(--text-primary);
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   padding: 0;
 }
 
 .scrollLeft {
-  left: 0;
+  left: 4px;
 }
 
 .scrollRight {
-  right: 0;
+  right: 4px;
 }
 
 .scrollArrow:hover {
@@ -550,17 +591,17 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 24px;
-  z-index: 1;
+  width: 32px;
+  z-index: 2;
   pointer-events: none;
 }
 
 .mobileNav::before {
   left: 0;
-  background: linear-gradient(to right, var(--nav-bg) 0%, transparent 100%);
+  background: linear-gradient(90deg, var(--nav-bg), transparent);
 }
 
 .mobileNav::after {
   right: 0;
-  background: linear-gradient(to left, var(--nav-bg) 0%, transparent 100%);
+  background: linear-gradient(270deg, var(--nav-bg), transparent);
 }
