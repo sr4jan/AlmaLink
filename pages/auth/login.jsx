@@ -236,15 +236,6 @@ export default function Login() {
     </>
   )}
 </button>
-
-  <button 
-    type="button" 
-    className={styles.socialButton}
-    onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
-  >
-    <img src="/github-icon.svg" alt="GitHub" width="18" height="18" />
-    Sign in with GitHub
-  </button>
 </div>
           <p className={styles.footer}>
             Don't have an account?{' '}
