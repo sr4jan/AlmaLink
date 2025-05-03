@@ -1,11 +1,26 @@
 import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import bcrypt from 'bcryptjs';
+import College from '@/models/College';
 
 export const authOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "select_account",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
+    }),
+    // ... other providers
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -49,16 +64,48 @@ export const authOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account, profile }) {
+      if (account.provider === "google") {
+        try {
+          await connectDB();
+          
+          // Check if user exists
+          let existingUser = await User.findOne({ email: user.email });
+          
+          if (existingUser) {
+            // Update user's Google-specific info if needed
+            if (!existingUser.profile.avatar && user.image) {
+              existingUser.profile.avatar = user.image;
+              await existingUser.save();
+            }
+            return true;
+          } else {
+            // Since this is login page, we should not create new users
+            // Instead, we should return false to show an error
+            return false;
+          }
+        } catch (error) {
+          console.error("SignIn Callback Error:", error);
+          return false;
+        }
+      }
+      return true;
+    },
+    async jwt({ token, user, account }) {
+      // Get fresh user data from database
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        token.email = user.email;
-        token.username = user.username;
-        token.name = user.name;
-        token.avatar = user.avatar;
-        token.collegeId = user.collegeId;
-        token.profile = user.profile;
+        await connectDB();
+        const dbUser = await User.findOne({ email: user.email });
+        
+        if (dbUser) {
+          token.id = dbUser._id.toString();
+          token.role = dbUser.role;
+          token.email = dbUser.email;
+          token.username = dbUser.username;
+          token.name = dbUser.name || dbUser.username;
+          token.profile = dbUser.profile;
+          token.collegeId = dbUser.collegeId?.toString();
+        }
       }
       return token;
     },
@@ -69,9 +116,8 @@ export const authOptions = {
         session.user.email = token.email;
         session.user.username = token.username;
         session.user.name = token.name;
-        session.user.avatar = token.avatar;
-        session.user.collegeId = token.collegeId;
         session.user.profile = token.profile;
+        session.user.collegeId = token.collegeId;
       }
       return session;
     }
@@ -79,7 +125,20 @@ export const authOptions = {
   pages: {
     signIn: '/auth/login',
     error: '/auth/error',
+    newUser: '/auth/signup',
   },
+  events: {
+    async signIn(message) {
+      console.log('Sign in event:', message);
+    },
+    async signOut(message) {
+      console.log('Sign out event:', message);
+    },
+    async error(message) {
+      console.error('Error event:', message);
+    }
+  },
+  debug: process.env.NODE_ENV === 'development',
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -88,3 +147,4 @@ export const authOptions = {
 };
 
 export default NextAuth(authOptions);
+

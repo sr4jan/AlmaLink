@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { signIn } from "next-auth/react";
@@ -7,13 +7,48 @@ import { toast } from 'react-hot-toast';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Shield, Users, BookOpen } from 'lucide-react';
 import styles from './login.module.css';
 
+
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const handleGoogleSignIn = async () => {
+    try {
+      setLoading(true); // Add loading state
+      const result = await signIn('google', { 
+        redirect: false,
+        callbackUrl: '/dashboard'
+      });
+  
+      if (result?.error) {
+        if (result.error === 'AccessDenied') {
+          // User doesn't exist, redirect to signup
+          toast.error('Account not found. Please sign up first.');
+          router.push('/auth/signup');
+          return;
+        }
+        toast.error(result.error);
+        return;
+      }
+  
+      toast.success('Login successful!');
+      router.push(result.url || '/dashboard');
+    } catch (error) {
+      console.error('Google sign in error:', error);
+      toast.error('Failed to sign in with Google');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    const shouldShowModal = localStorage.getItem('showRoleModal');
+    if (shouldShowModal) {
+      setShowRoleModal(true);
+    }
+  }, []);
   async function handleSubmit(e) {
     e.preventDefault();
   
@@ -185,11 +220,32 @@ export default function Login() {
             <div className={styles.dividerLine}></div>
           </div>
 
-          <button type="button" className={styles.socialButton}>
-            <img src="/google-icon.svg" alt="Google" width="18" height="18" />
-            Sign in with Google
-          </button>
+          <div className={styles.socialButtons}>
+          <button 
+  type="button" 
+  className={styles.socialButton}
+  onClick={handleGoogleSignIn}
+  disabled={loading}
+>
+  {loading ? (
+    <div className={styles.spinner} />
+  ) : (
+    <>
+      <img src="/google-icon.svg" alt="Google" width="18" height="18" />
+      Sign in with Google
+    </>
+  )}
+</button>
 
+  <button 
+    type="button" 
+    className={styles.socialButton}
+    onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
+  >
+    <img src="/github-icon.svg" alt="GitHub" width="18" height="18" />
+    Sign in with GitHub
+  </button>
+</div>
           <p className={styles.footer}>
             Don't have an account?{' '}
             <Link href="/auth/signup" className={styles.signupLink}>

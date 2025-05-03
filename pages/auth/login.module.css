@@ -326,3 +326,37 @@
       padding: 20px;
     }
   }
+  .socialButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  .socialButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1.5px solid var(--nav-border);
+    border-radius: 12px;
+    background: var(--nav-bg);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .socialButton:hover {
+    background: rgba(var(--primary-rgb), 0.1);
+    border-color: var(--primary);
+  }
+  
+  .socialButton img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
