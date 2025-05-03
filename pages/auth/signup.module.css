@@ -374,9 +374,12 @@
   text-align: center;
   font-size: 14px;
   color: var(--text-secondary);
-  margin-top: 24px;
-  width: 100%; /* Added */
-  box-sizing: border-box; /* Added */
+  padding: 16px;
+  margin-top: auto;
+  background: var(--card-bg);
+  width: 100%;
+  box-sizing: border-box;
+  border-top: 1px solid var(--border-color);
 }
 
 .loginLink {
@@ -416,19 +419,30 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
+.loginLink {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  display: inline-block; /* Added */
+  padding: 4px 8px; /* Added */
+}
 /* Responsive Styles */
 @media (max-width: 768px) {
   .container {
     padding: 0;
     margin-top: 64px;
+    min-height: calc(100vh - 64px);
+    height: auto;
+    box-sizing: border-box;
   }
 
   .card {
-    flex-direction: column;
+    min-height: calc(100vh - 64px);
     height: auto;
-    min-height: calc(100vh - 64px); /* Updated */
-    border-radius: 0;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
   }
 
   .brandPanel,
@@ -441,14 +455,13 @@
   /* Compressed brand panel for mobile */
   .brandPanel {
     width: 100%;
-    padding: 20px;
     min-height: auto;
-    position: relative;
+    max-height: 140px; /* Increased for better spacing */
+    padding: 16px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start; /* Changed */
     gap: 16px;
-    height: auto;
-    max-height: none;
   }
 
   .brandTitle {
@@ -479,10 +492,16 @@
   }
 
   .buttonGroup {
-    position: sticky;
-    bottom: 0;
+    position: fixed;
+    bottom: 60px; /* Moved up to make space for footer */
+    left: 0;
+    right: 0;
     padding: 16px;
-    margin-bottom: 0;
+    background: var(--card-bg);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    z-index: 99;
+    border-top: 1px solid var(--border-color);
   }
 
   .input, 
@@ -515,14 +534,13 @@
   }
   /* Improved step indicator for mobile */
   .stepIndicator {
-    margin: 0;
-    padding: 0;
-    justify-content: flex-start;
-    gap: 12px;
-    position: relative;
-    z-index: 2;
+    margin-top: auto; /* Push to bottom */
+    padding-top: 8px; /* Added space from title */
+    position: relative; /* Changed from absolute */
+    bottom: auto;
+    left: auto;
+    right: auto;
   }
-
   .step {
     font-size: 12px;
     padding: 4px 12px;
@@ -558,72 +576,94 @@
     justify-content: space-between;
     gap: 16px;
   }
+  .signupPanel {
+    flex: 1;
+    padding: 20px;
+    height: auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+  }
+
+  .form {
+    flex: 1;
+    margin-bottom: 120px; /* Space for footer */
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    background: var(--card-bg);
+    z-index: 98; /* Below buttons */
+    border-top: 1px solid var(--border-color);
+    margin: 0;
+  }
+
+  /* Adjust content to prevent overlap with fixed elements */
+  .formContent {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
 }
 
+/* iPhone specific fixes */
 @media (max-width: 480px) {
   .brandPanel {
     padding: 16px;
-    max-height: 200px; /* Further compressed for mobile */
-  }
-
-  .signupPanel {
-    padding: 20px;
-  }
-
-  .buttonGroup {
-    flex-direction: column;
-    padding: 16px;
-  }
-
-  .backButton,
-  .nextButton,
-  .signupButton {
-    width: 100%;
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  .input, 
-  .select {
-    padding: 10px 32px;
-    font-size: 14px;
-  }
-  .brandTitle {
-    font-size: 18px;
+    max-height: 100px; /* Even more compact */
   }
 
   .step {
     font-size: 11px;
-    padding: 4px 10px;
+    padding: 4px 8px;
   }
 
+  .signupPanel {
+    padding: 16px;
+  }
+
+  .buttonGroup {
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .footer {
+    font-size: 13px;
+    padding: 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .loginLink {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 4px 0;
+    font-size: 13px;
+  }
+
+  /* Adjust form spacing */
+  .form {
+    margin-bottom: calc(140px + env(safe-area-inset-bottom));
+  }
 }
 
-/* Resume upload button styles */
-.resumeUpload {
-  width: auto; /* Changed from 100% if it was */
-  min-width: 140px; /* Added */
-  max-width: 200px; /* Added */
-  padding: 10px 16px; /* Reduced padding */
-  font-size: 14px; /* Smaller font */
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 10px; /* Slightly reduced */
-  background-color: var(--input-bg);
-  border: 1px dashed var(--border-color);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+/* Added safe area insets for iPhone */
+@supports (padding: max(0px)) {
+  .container {
+    padding-top: max(64px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
 
-.resumeUpload:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background-color: var(--primary-transparent);
-}
+  .buttonGroup {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
 
-.resumeIcon {
-  width: 18px; /* Smaller icon */
-  height: 18px;
+  .footer {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  
 }
