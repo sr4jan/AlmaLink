@@ -38,6 +38,9 @@ const formatTimestamp = (date) => {
   }
 }
 
+// Add this to your React component
+
+
 // Helper to get concise last message time for sidebar
 const formatLastMessageTime = (date) => {
   if (!date) return ""
@@ -80,7 +83,43 @@ export default function ChatPage() {
       fetchConnections()
     }
   }, [status, router])
-
+  useEffect(() => {
+    const handleResize = () => {
+      const initialWindowHeight = window.innerHeight
+      
+      if ('visualViewport' in window) {
+        const handleViewportResize = () => {
+          const isKeyboardVisible = window.visualViewport.height < initialWindowHeight
+          document.querySelector(`.${styles.chatPageContainer}`)?.classList.toggle('keyboardVisible', isKeyboardVisible)
+        }
+        window.visualViewport.addEventListener('resize', handleViewportResize)
+        return () => window.visualViewport.removeEventListener('resize', handleViewportResize)
+      } else {
+        const handleWindowResize = () => {
+          const isKeyboardVisible = window.innerHeight < initialWindowHeight
+          document.querySelector(`.${styles.chatPageContainer}`)?.classList.toggle('keyboardVisible', isKeyboardVisible)
+        }
+        window.addEventListener('resize', handleWindowResize)
+        return () => window.removeEventListener('resize', handleWindowResize)
+      }
+    }
+  
+    if (typeof window !== 'undefined') {
+      handleResize()
+    }
+  }, [])
+  
+  // Add scroll to bottom when keyboard appears
+  useEffect(() => {
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+  
+    if ('visualViewport' in window) {
+      window.visualViewport.addEventListener('resize', scrollToBottom);
+      return () => window.visualViewport.removeEventListener('resize', scrollToBottom);
+    }
+  }, []);
   useEffect(() => {
     if (selectedChat?._id) {
       fetchMessages(selectedChat._id)

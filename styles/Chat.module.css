@@ -1162,14 +1162,14 @@
 @media (max-width: 768px) {
   .chatPageContainer {
     position: fixed;
-    top: 48px;
+    top: 60px; /* Match navbar height */
     left: 0;
     right: 0;
     bottom: 56px;
-    height: calc(100vh - 48px - 56px);
+    height: calc(100vh - 60px - 56px);
     width: 100%;
-    margin: 0; /* Remove all margins */
-    margin-top: 0; /* Explicitly remove top margin */
+    margin: 0;
+    margin-top: 0 !important; /* Force remove top margin */
     padding: 0;
     border-radius: 0;
     border: none;
@@ -1179,12 +1179,12 @@
   
   .sidebar {
     position: fixed;
-    top: 48px; /* Reduced to match container */
+    top: 60px; /* Match navbar height */
     left: 0;
     right: 0;
     bottom: 56px;
     width: 100%;
-    height: calc(100vh - 48px - 56px); /* Adjusted height calculation */
+    height: calc(100vh - 60px - 56px);
     margin: 0;
     padding: 0;
     transform: translateX(-100%);
@@ -1254,7 +1254,7 @@
   /* Adjust connections list */
   .connectionsList {
     padding-top: 0; /* Remove top padding */
-    height: calc(100vh - 48px - 56px - var(--mobile-header-height) - var(--mobile-search-height));
+    height: calc(100vh - 60px - 56px - var(--mobile-header-height) - var(--mobile-search-height));
   }
   
 }
@@ -1362,4 +1362,26 @@
 
 .noScroll {
   overflow: hidden !important;
+}
+@media (max-width: 768px) {
+  .chatPageContainer.keyboardVisible {
+    bottom: 0 !important;
+    height: calc(100vh - 60px) !important; /* Changed from 48px to 60px */
+  }
+
+  .keyboardVisible .inputContainer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding: 8px 12px;
+    z-index: 1000;
+  }
+
+  .keyboardVisible .messagesContainer {
+    padding-bottom: var(--mobile-input-height);
+    height: calc(100vh - 60px - var(--mobile-header-height) - var(--mobile-input-height)); /* Changed from 48px to 60px */
+  }
 }
