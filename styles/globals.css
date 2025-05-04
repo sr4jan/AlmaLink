@@ -331,4 +331,8 @@ input:focus, select:focus, textarea:focus {
 :root {
   --mobile-input-height: 56px;
   --mobile-header-height: 60px;
+  --mobile-nav-height: 56px;
+}
+:global(.mobileNav.hidden) {
+  display: none !important;
 }

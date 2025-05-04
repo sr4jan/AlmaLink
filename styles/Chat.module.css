@@ -1363,13 +1363,17 @@
 .noScroll {
   overflow: hidden !important;
 }
+.hidden {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
-  .chatPageContainer.keyboardVisible {
+  .chatPageContainer.inputFocused {
     bottom: 0 !important;
-    height: calc(100vh - 60px) !important; /* Changed from 48px to 60px */
+    height: calc(100vh - 60px) !important;
   }
 
-  .keyboardVisible .inputContainer {
+  .inputFocused .inputContainer {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -1380,8 +1384,11 @@
     z-index: 1000;
   }
 
-  .keyboardVisible .messagesContainer {
-    padding-bottom: var(--mobile-input-height);
-    height: calc(100vh - 60px - var(--mobile-header-height) - var(--mobile-input-height)); /* Changed from 48px to 60px */
+  .inputFocused .messagesContainer {
+    padding-bottom: calc(var(--mobile-input-height) + 8px);
+    height: calc(100vh - 60px - var(--mobile-header-height) - var(--mobile-input-height));
   }
+
+  /* This will be applied globally through the styles.hidden class */
+  
 }

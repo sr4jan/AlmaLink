@@ -725,18 +725,29 @@ export default function ChatPage() {
               </div>
 
               <div className={styles.inputWrapper}>
-                <input
-                  type="text"
-                  placeholder="Type a message..."
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  className={styles.messageInput}
-                  ref={messageInputRef}
-                  aria-label="Message input"
-                />
-
-                {showEmojiPicker && <EmojiPicker />}
-              </div>
+              <input
+  type="text"
+  placeholder="Type a message..."
+  value={newMessage}
+  onChange={(e) => setNewMessage(e.target.value)}
+  className={styles.messageInput}
+  ref={messageInputRef}
+  aria-label="Message input"
+  onFocus={() => {
+    // Use the styles module class name
+    document.querySelector(`.${styles.chatPageContainer}`)?.classList.add(styles.inputFocused);
+    // Use the global class for mobile nav since it's in a different component
+    document.querySelector('.mobileNav')?.classList.add(styles.hidden);
+  }}
+  onBlur={() => {
+    setTimeout(() => {
+      document.querySelector(`.${styles.chatPageContainer}`)?.classList.remove(styles.inputFocused);
+      document.querySelector('.mobileNav')?.classList.remove(styles.hidden);
+    }, 100);
+  }}
+/>
+    {showEmojiPicker && <EmojiPicker />}
+  </div>
 
               {newMessage.trim() || attachments.length > 0 ? (
                 <button type="submit" className={styles.sendButton} aria-label="Send message">
