@@ -246,3 +246,89 @@ input:focus, select:focus, textarea:focus {
 :global(main) {
   padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
+:root {
+  /* Layout */
+  --navbar-height: 64px;
+  --mobile-navbar-height: 56px;
+  --bottom-nav-height: 56px;
+  --mobile-input-height: 62px;
+  --mobile-header-height: 60px;
+  --mobile-search-height: 60px;
+  --chat-max-width: 1600px;
+  --sidebar-width: 380px;
+  --profile-sidebar-width: 320px;
+
+  /* UI Elements */
+  --chat-border-radius: 24px;
+  --message-border-radius: 18px;
+  --input-border-radius: 24px;
+  --button-border-radius: 50%;
+  --chat-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+  /* Transitions */
+  --transition-speed: 0.3s;
+  --transition-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Messages */
+  --message-max-width: 65%;
+  --message-sent-bg: linear-gradient(135deg, #0062cc, #0094ff);
+  --message-received-bg: #f0f2f5;
+  --message-sent-text: #ffffff;
+  --message-received-text: #1a2b4c;
+
+  /* Colors - Light Mode */
+  --bg-primary: #f8fafd;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f2f5;
+  --bg-hover: #e9edf2;
+  --bg-active: #e1e6ed;
+
+  --text-primary: #1a2b4c;
+  --text-secondary: #445670;
+  --text-tertiary: #687994;
+
+  --border-color: #e5e9f0;
+  --divider-color: #eaeef5;
+
+  --primary: #0062cc;
+  --primary-dark: #0052ac;
+  --primary-light: #e6f0ff;
+  --primary-transparent: rgba(0, 98, 204, 0.1);
+
+  --online-indicator: #22c55e;
+  --error: #dc3545;
+  --warning: #f59e0b;
+
+  /* Chat Background */
+  --chat-bg-pattern: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] {
+  --bg-primary: #0a0d14;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1f2937;
+  --bg-hover: #2c3a4f;
+  --bg-active: #374151;
+
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+
+  --border-color: #1f2937;
+  --divider-color: #1f2937;
+
+  --message-received-bg: #1f2937;
+  --message-received-text: #e2e8f0;
+
+  --primary: #4dabff;
+  --primary-dark: #3b8edb;
+  --primary-light: #1a2b4c;
+  --primary-transparent: rgba(77, 171, 255, 0.15);
+
+  --chat-bg-pattern: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23374151' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+:root {
+  --mobile-input-height: 56px;
+  --mobile-header-height: 60px;
+}
