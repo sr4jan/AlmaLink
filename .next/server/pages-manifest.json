@@ -2,9 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/chat": "pages/chat.js",
   "/": "pages/index.js",
   "/api/auth/[...nextauth]": "pages/api/auth/[...nextauth].js",
-  "/api/chat/connections": "pages/api/chat/connections.js",
-  "/api/chat/messages/[userId]": "pages/api/chat/messages/[userId].js"
+  "/auth/login": "pages/auth/login.js",
+  "/how-it-works": "pages/how-it-works.js",
+  "/dashboard": "pages/dashboard.js"
 }

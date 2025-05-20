@@ -5,7 +5,7 @@ import Link from 'next/link';
 import ParticlesBackground from '@/components/ParticlesBackground';
 import { AnimatedBackground } from '@/components/AnimatedBackground';
 import styles from '@/styles/Home.module.css'; // Ensure path is correct
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Users, Award, Zap, MessageSquare, Star } from 'lucide-react'; // Relevant icons
+import {HeartHandshake, MessageCircle, Video, Calendar, Briefcase, MessagesSquare, Lightbulb, ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Users, Award, Zap, MessageSquare, Star } from 'lucide-react'; // Relevant icons
 
 
 
@@ -31,16 +31,153 @@ export default function Home() {
       });
     }
   };
-
+  const [instituteInfo, setInstituteInfo] = useState({
+    name: '',
+    totalAlumni: 0,
+    totalMentors: 0,
+    stats: {
+      activeMembers: 0,
+      universities: 0,
+      mentorships: 0,
+      satisfaction: 0
+    }
+  });
+  useEffect(() => {
+    const fetchInstituteData = async () => {
+      if (session?.user?.instituteId) {
+        try {
+          const response = await fetch(`/api/institute/${session.user.instituteId}`);
+          const data = await response.json();
+          setInstituteInfo(data);
+        } catch (error) {
+          console.error('Error fetching institute data:', error);
+        }
+      }
+    };
+  
+    fetchInstituteData();
+  }, [session]);
   // --- Dummy Data for Stories (Replace with actual data) ---
+  // Replace the alumniStories array with this more realistic dataset
   const alumniStories = [
-    { id: 'john-doe', name: 'Johnathan Doe', year: 2010, industry: 'Tech Entrepreneur', image: '/images/placeholder-alumni-1.jpg', description: 'Founded a SaaS startup acquired for $50M. Now mentors aspiring founders.' },
-    { id: 'jane-smith', name: 'Jane A. Smith', year: 2015, industry: 'Investment Banking', image: '/images/placeholder-alumni-2.jpg', description: 'VP at a leading global investment firm, managing multi-billion dollar portfolios.' },
-    { id: 'michael-j', name: 'Dr. Michael Johnson', year: 2012, industry: 'HealthTech Innovator', image: '/images/placeholder-alumni-3.jpg', description: 'Pioneered a telemedicine platform improving healthcare access in underserved regions.' },
-    { id: 'sara-chen', name: 'Sara Chen', year: 2018, industry: 'UX Design Lead', image: '/images/placeholder-alumni-4.jpg', description: 'Award-winning designer crafting intuitive interfaces for major tech companies.' },
-    { id: 'david-lee', name: 'David Lee', year: 2011, industry: 'Non-Profit Director', image: '/images/placeholder-alumni-5.jpg', description: 'Leads international initiatives providing sustainable clean water solutions.' },
-    { id: 'emily-white', name: 'Emily White', year: 2016, industry: 'Growth Marketing', image: '/images/placeholder-alumni-6.jpg', description: 'Heads growth marketing strategies, achieving significant ROI for Fortune 500 clients.' },
+    {
+      id: 'priya-sharma',
+      name: 'Priya Sharma',
+      year: 2019,
+      industry: 'AI Research',
+      title: 'Senior ML Engineer @ Google',
+      image: '/images/alumni/priya-sharma.jpg',
+      avatarFallback: 'PS', // First letters of first and last name
+      placeholderColor: '#FF6B6B', // Unique color for avatar background
+      description: 'Leading AI research team, published 3 papers on transformer architecture improvements.'
+    },
+    {
+      id: 'rahul-verma',
+      name: 'Rahul Verma',
+      year: 2017,
+      industry: 'FinTech',
+      title: 'Founder & CEO @ PayEase',
+      image: '/images/alumni/rahul-verma.jpg',
+      avatarFallback: 'RV',
+      placeholderColor: '#4ECDC4',
+      description: 'Built PayEase from scratch to 1M+ users, raised $12M Series A funding.'
+    },
+    {
+      id: 'aisha-patel',
+      name: 'Aisha Patel',
+      year: 2020,
+      industry: 'Product Design',
+      title: 'Product Designer @ Microsoft',
+      image: '/images/alumni/aisha-patel.jpg',
+      avatarFallback: 'AP',
+      placeholderColor: '#45B7D1',
+      description: 'Redesigned Teams UI leading to 40% increase in user engagement.'
+    },
+    {
+      id: 'vikram-singh',
+      name: 'Vikram Singh',
+      year: 2016,
+      industry: 'Cybersecurity',
+      title: 'Security Lead @ Cisco',
+      image: '/images/alumni/vikram-singh.jpg',
+      avatarFallback: 'VS',
+      placeholderColor: '#96CEB4',
+      description: 'Developed zero-trust security framework implemented by Fortune 500 companies.'
+    },
+    {
+      id: 'neha-gupta',
+      name: 'Neha Gupta',
+      year: 2018,
+      industry: 'Clean Energy',
+      title: 'CTO @ GreenGrid',
+      image: '/images/alumni/neha-gupta.jpg',
+      avatarFallback: 'NG',
+      placeholderColor: '#9B59B6',
+      description: 'Pioneering smart grid solutions reducing energy waste by 30%.'
+    },
+    {
+      id: 'arjun-reddy',
+      name: 'Arjun Reddy',
+      year: 2021,
+      industry: 'Health Tech',
+      title: 'Co-founder @ MedAI',
+      image: '/images/alumni/arjun-reddy.jpg',
+      avatarFallback: 'AR',
+      placeholderColor: '#5DADE2',
+      description: 'Revolutionizing rural healthcare with AI-powered diagnostics.'
+    }
   ];
+  const features = [
+    {
+      icon: <Lightbulb size={24} />,
+      title: "IdeaHub",
+      description: "Submit innovative ideas, get alumni funding, and showcase detailed projects with tag-based filtering.",
+      href: "/features/ideahub"
+    },
+    {
+      icon: <MessagesSquare size={24} />,
+      title: "Smart Q&A Forum",
+      description: "AI-powered question routing with skill-based matching and intelligent answer suggestions.",
+      href: "/features/questions"
+    },
+    {
+      icon: <Briefcase size={24} />,
+      title: "Job Portal",
+      description: "Access exclusive job postings with AI-driven skill matching and application tracking.",
+      href: "/features/jobs"
+    },
+    {
+      icon: <Calendar size={24} />,
+      title: "Events Hub",
+      description: "Manage college events, alumni meets with integrated RSVP system and calendar sync.",
+      href: "/features/events"
+    },
+    {
+      icon: <Video size={24} />,
+      title: "Live Sessions",
+      description: "Host interactive webinars with real-time Q&A and session analytics.",
+      href: "/features/live-sessions"
+    },
+    {
+      icon: <Users size={24} />,
+      title: "Smart Networking",
+      description: "Auto-college linking with AI-powered mentorship matching and profile cards.",
+      href: "/features/connections"
+    },
+    {
+      icon: <MessageCircle size={24} />,
+      title: "Secure Chat",
+      description: "End-to-end encrypted messaging with file sharing capabilities.",
+      href: "/features/chat"
+    },
+    {
+      icon: <HeartHandshake size={24} />,
+      title: "Donation Portal",
+      description: "Support ideas, events, and scholarship programs with secure transaction tracking.",
+      href: "/features/donations"
+    }
+  ];
+  // Update the story card rendering to handle image fallback:
   // --- End Dummy Data ---
 
   return (
@@ -56,18 +193,22 @@ export default function Home() {
         {/* Hero Section */}
         <section className={styles.heroSection} id="home">
           <div className={styles.heroContent}>
+            
             <h1 className={styles.title}>Connect. Learn. Grow.</h1>
             <p className={styles.description}>
               Unlock your potential. AlmaLink bridges the gap between ambitious students and accomplished alumni for mentorship, networking, and career acceleration.
             </p>
             <div className={styles.heroCTA}>
-              {!loading && !session && (
-                <>
-                  {/* Use Link for internal navigation if applicable */}
-                  <button className={styles.primaryButton} onClick={() => scrollToSection('cta')}>Get Started Free</button>
-                  <button className={styles.secondaryButton} onClick={() => scrollToSection('features')}>Explore Features</button>
-                </>
-              )}
+            {!loading && !session && (
+  <>
+    <button className={styles.primaryButton} onClick={() => scrollToSection('cta')}>
+      Get Started Free
+    </button>
+    <Link href="/how-it-works" className={styles.secondaryButton}>
+      How It Works
+    </Link>
+  </>
+)}
               {!loading && session && (
                  <Link href="/dashboard/student" className={styles.primaryButton}> {/* Simplified dashboard link */}
                    Explore Dashboard
@@ -128,33 +269,51 @@ export default function Home() {
           </div>
           <div className={styles.storiesScrollerContainer}>
              <div className={styles.storiesScroller} ref={storiesScrollerRef}>
-               {alumniStories.map((story) => (
-                 <div className={styles.storyCard} key={story.id}>
-                   <Link href={`/alumni/${story.id}`} className={styles.storyLinkWrapper}>
-                     <div className={styles.storyImageContainer}>
-                       <img
-                         src={story.image || '/images/placeholder-alumni.jpg'}
-                         alt={`Portrait of ${story.name}`}
-                         className={styles.storyImage}
-                         loading="lazy"
-                         width="350" height="220" // Adjusted dimensions for 16:10
-                       />
-                       <div className={styles.storyImageOverlay}></div>
-                       <div className={styles.storyMetaTags}>
-                         <span className={styles.storyTag}>Class of {story.year}</span>
-                         <span className={styles.storyTag}>{story.industry}</span>
-                       </div>
-                     </div>
-                     <div className={styles.storyContent}>
-                       <h3 className={styles.storyTitle}>{story.name}</h3>
-                       <p className={styles.storyDescription}>{story.description}</p>
-                       <div className={styles.storyButton}>
-                         Read Full Story <ArrowRight size={16} />
-                       </div>
-                     </div>
-                   </Link>
-                 </div>
-               ))}
+             {alumniStories.map((story) => (
+  <div className={styles.storyCard} key={story.id}>
+    <Link href={`/alumni/${story.id}`} className={styles.storyLinkWrapper}>
+      <div className={styles.storyImageContainer}>
+        {/* Image with fallback */}
+        <div className={styles.storyImageWrapper}>
+          <img
+            src={story.image}
+            alt={`Portrait of ${story.name}`}
+            className={styles.storyImage}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextElementSibling.style.display = 'flex';
+            }}
+            loading="lazy"
+            width="350"
+            height="220"
+          />
+          <div 
+            className={styles.avatarFallback}
+            style={{ 
+              backgroundColor: story.placeholderColor,
+              display: 'none'
+            }}
+          >
+            {story.avatarFallback}
+          </div>
+        </div>
+        <div className={styles.storyImageOverlay}></div>
+        <div className={styles.storyMetaTags}>
+          <span className={styles.storyTag}>Class of {story.year}</span>
+          <span className={styles.storyTag}>{story.industry}</span>
+        </div>
+      </div>
+      <div className={styles.storyContent}>
+        <h3 className={styles.storyTitle}>{story.name}</h3>
+        <div className={styles.storyRole}>{story.title}</div>
+        <p className={styles.storyDescription}>{story.description}</p>
+        <div className={styles.storyButton}>
+          Read Full Story <ArrowRight size={16} />
+        </div>
+      </div>
+    </Link>
+  </div>
+))}
                <div className={`${styles.storyCard} ${styles.viewAllCard}`}>
                   <Link href="/alumni" className={styles.viewAllLink}>
                      <span>View All<br/>Success Stories</span>
@@ -170,74 +329,63 @@ export default function Home() {
 
         {/* Features Section */}
         <section className={styles.featuresSection} id="features">
-          <div className={styles.sectionContent}>
-            <h2 className={styles.sectionTitle}>Features Designed for Growth</h2>
-            <p className={styles.sectionSubtitle}>
-              Leverage AlmaLink's powerful tools to connect, learn, and accelerate your professional journey.
-            </p>
-            <div className={styles.featuresList}>
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}><MessageSquare size={28} /></div>
-                <h3 className={styles.featureTitle}>IdeaHub</h3>
-                <p className={styles.featureDescription}>
-                  Share your entrepreneurial ideas, get valuable feedback from experienced alumni, and connect with potential co-founders or mentors.
-                </p>
-                <Link href="/features/ideahub" className={styles.featureLink}>
-                  Explore IdeaHub <ArrowRight size={16} className={styles.featureArrow} />
-                </Link>
-              </div>
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}><Zap size={28} /></div>
-                <h3 className={styles.featureTitle}>Live Sessions</h3>
-                <p className={styles.featureDescription}>
-                  Attend exclusive live Q&As and workshops with industry leaders. Gain insights, ask questions, and learn from the best.
-                </p>
-                <Link href="/features/live-sessions" className={styles.featureLink}>
-                  View Upcoming Sessions <ArrowRight size={16} className={styles.featureArrow} />
-                </Link>
-              </div>
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}><Users size={28} /></div>
-                <h3 className={styles.featureTitle}>Targeted Networking</h3>
-                <p className={styles.featureDescription}>
-                  Connect with alumni based on industry, company, or expertise. Build meaningful relationships for mentorship and opportunities.
-                </p>
-                <Link href="/features/networking" className={styles.featureLink}>
-                  Start Connecting <ArrowRight size={16} className={styles.featureArrow} />
-                </Link>
-              </div>
-            </div>
+  <div className={styles.sectionContent}>
+    <h2 className={styles.sectionTitle}>Features Designed for Growth</h2>
+    <p className={styles.sectionSubtitle}>
+      Leverage AlmaLink's AI-powered ecosystem to connect, learn, and accelerate your professional journey.
+    </p>
+    <div className={styles.featuresList}>
+      {features.map((feature, index) => (
+        <div key={index} className={styles.featureCard}>
+          <div className={styles.featureIcon}>{feature.icon}</div>
+          <div className={styles.featureContent}>
+            <h3 className={styles.featureTitle}>{feature.title}</h3>
+            <p className={styles.featureDescription}>{feature.description}</p>
+            {feature.href && (
+              <Link href={feature.href} className={styles.featureLink}>
+                Learn More <ArrowRight size={16} className={styles.featureArrow} />
+              </Link>
+            )}
+            
           </div>
-        </section>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 
         {/* Call to Action */}
-        <section className={styles.ctaSection} id="cta">
-          <div className={styles.sectionContent}>
-            <h2 className={styles.ctaTitle}>Ready to Ignite Your Future?</h2>
-            <p className={styles.ctaDescription}>
-              Join thousands of students and alumni building a powerful, supportive network for lifelong success. Sign up free today.
-            </p>
-            <div className={styles.ctaButtons}>
-              {!loading && !session && (
-                <>
-                  <button className={styles.primaryButton}>Join AlmaLink Now</button>
-                  <button className={styles.secondaryButton}>How It Works</button>
-                </>
-              )}
-               {!loading && session && (
-                 <Link href="/learn-more" className={styles.primaryButton}> {/* Simplified dashboard link */}
-                   Learn More
-                 </Link>
-              )}
-               {loading && (
-                <>
-                  <div className={`${styles.buttonSkeleton} ${styles.primaryButton}`}></div>
-                  <div className={`${styles.buttonSkeleton} ${styles.secondaryButton}`}></div>
-                </>
-               )}
-            </div>
-          </div>
-        </section>
+<section className={styles.ctaSection} id="cta">
+  <div className={styles.sectionContent}>
+    <h2 className={styles.ctaTitle}>Ready to Ignite Your Future?</h2>
+    <p className={styles.ctaDescription}>
+      Join thousands of students and alumni building a powerful, supportive network for lifelong success. Sign up free today.
+    </p>
+    <div className={styles.ctaButtons}>
+      {!loading && !session && (
+        <>
+          <Link href="/auth/signup" className={styles.primaryButton}>
+            Join AlmaLink Now
+          </Link>
+          <Link href="/learn-more" className={styles.secondaryButton}>
+            Learn More
+          </Link>
+        </>
+      )}
+      {!loading && session && (
+        <Link href="/learn-more" className={styles.primaryButton}>
+          Learn More
+        </Link>
+      )}
+      {loading && (
+        <>
+          <div className={`${styles.buttonSkeleton} ${styles.primaryButton}`}></div>
+          <div className={`${styles.buttonSkeleton} ${styles.secondaryButton}`}></div>
+        </>
+      )}
+    </div>
+  </div>
+</section>
       </main>
 
             {/* Footer */}

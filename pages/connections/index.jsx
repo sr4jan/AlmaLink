@@ -39,6 +39,23 @@ export default function ConnectionsPage() {
     }
   }, [status, activeTab]);
 
+  // Add to your existing useEffect
+useEffect(() => {
+  const handleScroll = () => {
+    const tabsElement = document.querySelector(`.${styles.tabs}`);
+    if (tabsElement) {
+      if (window.scrollY > 64) { // Adjust this value based on your navbar height
+        tabsElement.classList.add(styles.sticky);
+      } else {
+        tabsElement.classList.remove(styles.sticky);
+      }
+    }
+  };
+
+  window.addEventListener('scroll', handleScroll);
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
+
   const fetchConnections = async (filter) => {
     try {
       setLoading(true);
@@ -108,35 +125,36 @@ export default function ConnectionsPage() {
   return (
     <div className={styles.container}>
       {/* Header Section */}
-      <div className={styles.header}>
-        <div className={styles.searchBar}>
-          <Search size={20} />
-          <input
-            type="text"
-            placeholder={`Search ${activeTab === 'alumni' ? 'alumni' : 'students'}...`}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </div>
-
-      {/* Tabs Section */}
-      <div className={styles.tabs}>
-        <button
-          className={`${styles.tab} ${activeTab === 'alumni' ? styles.active : ''}`}
-          onClick={() => setActiveTab('alumni')}
-        >
-          <GraduationCap size={18} />
-          Alumni
-        </button>
-        <button
-          className={`${styles.tab} ${activeTab === 'students' ? styles.active : ''}`}
-          onClick={() => setActiveTab('students')}
-        >
-          <Users size={18} />
-          Students
-        </button>
-      </div>
+      {/* Header Section - Combined Search and Tabs */}
+<div className={styles.header}>
+  <div className={styles.headerContent}>
+    <div className={styles.searchBar}>
+      <Search size={20} />
+      <input
+        type="text"
+        placeholder={`Search ${activeTab === 'alumni' ? 'alumni' : 'students'}...`}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+    <div className={styles.tabs}>
+      <button
+        className={`${styles.tab} ${activeTab === 'alumni' ? styles.active : ''}`}
+        onClick={() => setActiveTab('alumni')}
+      >
+        <GraduationCap size={18} />
+        Alumni
+      </button>
+      <button
+        className={`${styles.tab} ${activeTab === 'students' ? styles.active : ''}`}
+        onClick={() => setActiveTab('students')}
+      >
+        <Users size={18} />
+        Students
+      </button>
+    </div>
+  </div>
+</div>
 
       {/* Connections Grid */}
       <div className={styles.connectionsGrid}>

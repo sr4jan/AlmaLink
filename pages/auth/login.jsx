@@ -14,30 +14,19 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  // In your Login component:
+
   const handleGoogleSignIn = async () => {
     try {
-      setLoading(true); // Add loading state
-      const result = await signIn('google', { 
-        redirect: false,
-        callbackUrl: '/dashboard'
+      setLoading(true);
+      // Initiate Google sign in - this will redirect to Google
+      await signIn('google', { 
+        callbackUrl: '/dashboard',
       });
-  
-      if (result?.error) {
-        if (result.error === 'AccessDenied') {
-          // User doesn't exist, redirect to signup
-          toast.error('Account not found. Please sign up first.');
-          router.push('/auth/signup');
-          return;
-        }
-        toast.error(result.error);
-        return;
-      }
-  
-      toast.success('Login successful!');
-      router.push(result.url || '/dashboard');
+      
     } catch (error) {
       console.error('Google sign in error:', error);
-      toast.error('Failed to sign in with Google');
+      toast.error('Failed to initialize Google sign in');
     } finally {
       setLoading(false);
     }

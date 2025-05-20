@@ -1,19 +1,36 @@
 'use client';
 import { useEffect } from 'react';
-import { Github, Linkedin, Mail, Twitter } from 'lucide-react';
+import { useSession } from "next-auth/react";
+import { TechStack } from '@/components/TechStack';
+import { Github, Linkedin, Mail, Instagram, Twitter } from 'lucide-react';
 import styles from '@/styles/LearnMore.module.css';
 
 export default function LearnMore() {
+  const { data: session } = useSession();
   useEffect(() => {
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        });
+    const handleAnchorClick = (e) => {
+      const links = document.querySelectorAll('a[href^="#"]');
+      links.forEach(link => {
+        if (e.target === link) {
+          e.preventDefault();
+          const targetId = link.getAttribute('href').slice(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            const offset = 150; // Increased offset to match scroll-margin-top
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+  
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        }
       });
-    });
+    };
+  
+    document.addEventListener('click', handleAnchorClick);
+    return () => document.removeEventListener('click', handleAnchorClick);
   }, []);
 
   return (
@@ -78,27 +95,7 @@ export default function LearnMore() {
           </div>
         </section>
 
-        <section id="tech-stack" className={styles.section}>
-          <h2>🛠️ Tech Stack</h2>
-          <div className={styles.techStack}>
-            <div className={styles.techItem}>
-              <img src="/nextjs-icon.svg" alt="Next.js" />
-              <span>Next.js</span>
-            </div>
-            <div className={styles.techItem}>
-              <img src="/tailwind-icon.svg" alt="Tailwind CSS" />
-              <span>Tailwind CSS</span>
-            </div>
-            <div className={styles.techItem}>
-              <img src="/mongodb-icon.svg" alt="MongoDB" />
-              <span>MongoDB</span>
-            </div>
-            <div className={styles.techItem}>
-              <img src="/nodejs-icon.svg" alt="Node.js" />
-              <span>Node.js</span>
-            </div>
-          </div>
-        </section>
+        <TechStack />
 
         <section id="developer" className={styles.section}>
           <h2>👨‍💻 Meet the Developer</h2>
@@ -125,6 +122,9 @@ export default function LearnMore() {
                 <span>Machine Learning</span>
               </div>
               <div className={styles.socialLinks}>
+                <a href="https://www.instagram.com/sr4jan" target="_blank" rel="noopener noreferrer">
+                  <Instagram size={20} />
+                </a>
                 <a href="https://github.com/sr4jan" target="_blank" rel="noopener noreferrer">
                   <Github size={20} />
                 </a>
@@ -134,7 +134,7 @@ export default function LearnMore() {
                 <a href="https://twitter.com/sr4jan" target="_blank" rel="noopener noreferrer">
                   <Twitter size={20} />
                 </a>
-                <a href="mailto:contact@sr4jan.dev">
+                <a href="mailto:srajansoni2004@gmail.com" target="_blank" rel="noopener noreferrer">
                   <Mail size={20} />
                 </a>
               </div>
@@ -171,9 +171,12 @@ export default function LearnMore() {
             project or an alum wanting to give back — AlmaLink is the bridge between dreams and direction.
           </p>
           <div className={styles.ctaButtons}>
-            <a href="/auth/signup" className={styles.primaryButton}>Get Started</a>
-            <a href="/contact" className={styles.secondaryButton}>Contact Us</a>
-          </div>
+          {!session && ( // Only show Get Started button if user is not logged in
+            <a href="/auth/login" className={styles.primaryButton}>
+              Get Started
+            </a>
+          )}
+        </div>
         </section>
       </main>
     </div>

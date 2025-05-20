@@ -1,7 +1,7 @@
 .container {
   min-height: calc(100vh - 64px);
   padding: 2rem;
-  padding-top: 7rem;
+  padding-top: calc(64px + 5.5rem); /* Increased to prevent overlap */
   background: var(--bg-primary);
   color: var(--text-primary);
   max-width: 1400px;
@@ -10,7 +10,6 @@
   transition: all 0.3s ease;
 }
 
-/* Gradient background effect */
 .container::before {
   content: '';
   position: fixed;
@@ -27,27 +26,35 @@
 
 .header {
   position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
+  top: calc(64px + 1.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 800px;
   background: var(--bg-elevated);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  padding: 1rem 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
   z-index: 100;
-  border-bottom: 1px solid var(--border-color);
+  padding: 1rem;
   box-shadow: 0 4px 30px var(--shadow-color);
+}
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .searchBar {
-  max-width: 600px;
-  margin: 0 auto;
+  width: 500px; /* Fixed width */
   display: flex;
   align-items: center;
   gap: 1rem;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 0.75rem 1.25rem;
   transition: all 0.3s ease;
 }
@@ -62,8 +69,9 @@
   background: transparent;
   border: none;
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: 0.95rem;
   padding: 0.25rem 0;
+  min-width: 0;
 }
 
 .searchBar input::placeholder {
@@ -72,30 +80,24 @@
 
 .tabs {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  max-width: 600px;
-  position: relative;
-  z-index: 1;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .tab {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -109,7 +111,6 @@
   color: white;
   box-shadow: var(--shadow-primary);
 }
-
 .connectionsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -117,6 +118,7 @@
   padding: 1rem;
   position: relative;
   z-index: 1;
+  margin-top: 1rem;
 }
 
 .connectionCard {
@@ -135,10 +137,7 @@
 .connectionCard::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: var(--primary-gradient);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -162,15 +161,32 @@
 .avatar {
   width: 70px;
   height: 70px;
-  border-radius: 50%;
+  border-radius: 16px;
   border: 3px solid transparent;
-  background: var(--primary-gradient) border-box;
+  background: var(--primary-gradient) padding-box,
+              var(--primary-gradient) border-box;
   padding: 2px;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+.avatar::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  padding: 3px;
+  background: var(--primary-gradient);
+  mask: linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
 }
 
 .connectionCard:hover .avatar {
-  transform: scale(1.05);
+  transform: scale(1.05) rotate(3deg);
   box-shadow: 0 0 20px var(--primary-shadow);
 }
 
@@ -178,6 +194,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex: 1;
 }
 
 .headerInfo h3 {
@@ -185,12 +202,24 @@
   font-weight: 600;
   margin-bottom: 0.25rem;
   color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
+
+
 
 .role {
   color: var(--primary);
   font-size: 0.9rem;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary-transparent);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  width: fit-content;
 }
 
 .cardBody {
@@ -204,36 +233,42 @@
   gap: 0.75rem;
   color: var(--text-secondary);
   font-size: 0.9rem;
-  padding: 0.5rem;
+  padding: 0.75rem;
   background: var(--bg-secondary);
-  border-radius: 10px;
-  margin-bottom: 0.5rem;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
   transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 .infoItem:hover {
   background: var(--bg-elevated);
+  border-color: var(--border-color);
+  transform: translateX(4px);
 }
 
 .skills {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  margin-top: 1rem;
 }
 
 .skill {
-  padding: 0.25rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   background: var(--primary-transparent);
   color: var(--primary);
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 500;
   transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 .skill:hover {
   background: var(--primary);
   color: white;
+  transform: translateY(-2px);
 }
 
 .cardActions {
@@ -250,7 +285,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1rem;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 12px;
@@ -264,6 +299,7 @@
 .actionButton:hover {
   background: var(--bg-elevated);
   transform: translateY(-2px);
+  border-color: var(--primary);
 }
 
 .actionButton.primary {
@@ -274,8 +310,10 @@
 
 .actionButton.primary:hover {
   box-shadow: var(--shadow-primary);
+  transform: translateY(-2px);
 }
 
+/* Loading, Error, and No Results States */
 .loading, .error, .noResults {
   grid-column: 1 / -1;
   text-align: center;
@@ -284,6 +322,10 @@
   border: 1px solid var(--border-color);
   border-radius: 20px;
   color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .spinner {
@@ -296,42 +338,126 @@
   animation: spin 1s linear infinite;
 }
 
+
+/* Animations */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Enhanced Media Queries and Fixes */
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
-    padding-top: 6rem;
+    padding-top: calc(64px + 1rem); /* Account for navbar */
   }
 
   .header {
-    padding: 1rem;
+    top: calc(64px + 0.5rem);
+    padding: 0.75rem;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    width: 84%;
+  }
+  .headerContent {
+    gap: 0.5rem;
+  }
+  /* Fix searchbar size */
+  .searchBar {
+    width: 38%;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .searchBar input {
+    font-size: 0.9rem;
   }
 
   .tabs {
-    margin: 1rem -0.5rem;
-    padding: 0 0.5rem;
-    overflow-x: auto;
-    justify-content: flex-start;
-    -webkit-overflow-scrolling: touch;
+    gap: 0.5rem;
   }
 
   .tab {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
   }
 
   .connectionsGrid {
     grid-template-columns: 1fr;
     gap: 1rem;
     padding: 0.5rem;
+    margin-top: 4.5rem; /* Add more space for header */
+  }
+
+  .connectionCard {
+    padding: 1.25rem;
   }
 
   .cardActions {
     grid-template-columns: 1fr;
   }
+
+  
+}
+
+
+
+/* Fix z-index stacking */
+.header {
+  z-index: 48;
+}
+
+.connectionCard {
+  z-index: 1;
+}
+
+.metadataDisplay {
+  z-index: 49;
+}
+
+/* Animation keyframes */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced scrollbar styling */
+.container {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+
+.container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.container::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 3px;
+}
+
+/* Add these utility classes */
+.visibilityHidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.visibilityVisible {
+  visibility: visible;
+  opacity: 1;
 }
