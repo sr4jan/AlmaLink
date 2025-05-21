@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useSocket } from '@/contexts/SocketContext';
@@ -56,6 +56,7 @@ const formatLastMessageTime = (date) => {
 }
 
 export default function ChatPage() {
+  const [typingUsers, setTypingUsers] = useState(new Set());
   const { socket, isConnected } = useSocket();
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -76,6 +77,8 @@ export default function ChatPage() {
   const fileInputRef = useRef(null)
   const messageInputRef = useRef(null)
   const emojiPickerRef = useRef(null)
+  const lastMessageRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
@@ -100,42 +103,39 @@ export default function ChatPage() {
   }, [selectedChat?._id]);
 
   useEffect(() => {
-    if (!socket || !session?.user?.id || !selectedChat) return;
-
-    // Join personal room
-    socket.emit('join-room', session.user.id);
-    console.log('Joined room:', session.user.id);
-
-    // Message handler
-    const handleNewMessage = (message) => {
-      console.log('Received message:', message);
+    if (socket && session?.user?.id) {
+      // Announce user is online
+      socket.emit('user:online', session.user.id);
       
-      // Only update messages if it's relevant to current chat
-      if (message.sender === selectedChat._id || message.receiver === selectedChat._id) {
-        setMessages(prevMessages => {
-          // Check if message already exists
-          const messageExists = prevMessages.some(msg => msg._id === message._id);
-          if (messageExists) {
-            return prevMessages;
-          }
-          const newMessages = [...prevMessages, message];
-          // Sort messages by date
-          return newMessages.sort((a, b) => 
-            new Date(a.createdAt) - new Date(b.createdAt)
-          );
+      // Handle incoming messages
+      socket.on('message:received', handleNewMessage);
+      socket.on('message:sent', handleNewMessage);
+      
+      // Handle typing indicators
+      socket.on('typing:started', ({ userId, userName }) => {
+        setTypingUsers(prev => {
+          const newSet = new Set([...prev]);
+          newSet.add(userName || userId);
+          return newSet;
         });
-        scrollToBottom();
-      }
-    };
+      });
+      
+      socket.on('typing:stopped', ({ userId, userName }) => {
+        setTypingUsers(prev => {
+          const newSet = new Set([...prev]);
+          newSet.delete(userName || userId);
+          return newSet;
+        });
+      });
 
-    // Listen for new messages
-    socket.on('receive-message', handleNewMessage);
-
-    return () => {
-      socket.off('receive-message', handleNewMessage);
-    };
-  }, [socket, session?.user?.id, selectedChat]);
-
+      return () => {
+        socket.off('message:received');
+        socket.off('message:sent');
+        socket.off('typing:started');
+        socket.off('typing:stopped');
+      };
+    }
+  }, [socket, session?.user?.id]);
   // --- Effects ---
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -261,10 +261,31 @@ export default function ChatPage() {
     }
   }
 
+  const handleNewMessage = useCallback((message) => {
+    if (!selectedChat) return;
+    
+    const isRelevantChat = 
+      message.sender === selectedChat._id || 
+      message.receiver === selectedChat._id;
+  
+    if (isRelevantChat) {
+      setMessages(prev => {
+        // Prevent duplicates
+        if (prev.some(msg => msg._id === message._id)) {
+          return prev;
+        }
+        return [...prev, message];
+      });
+      
+      // Scroll to bottom
+      lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedChat, lastMessageRef]); // Add lastMessageRef to dependencies
+
   // --- Event Handlers ---
   const handleSendMessage = async (e) => {
     e?.preventDefault();
-    if ((!newMessage.trim() && attachments.length === 0) || !selectedChat || !session?.user?.id) return;
+    if (!newMessage.trim() || !selectedChat || !session?.user?.id) return;
 
     const messageToSend = {
       _id: `temp-${Date.now()}`,
@@ -272,86 +293,83 @@ export default function ChatPage() {
       sender: session.user.id,
       receiver: selectedChat._id,
       createdAt: new Date().toISOString(),
-      status: "sending",
-      read: false,
-      attachments: attachments.length > 0 ? [...attachments] : undefined,
     };
 
-    // Clear input and update UI optimistically
-    setNewMessage("");
-    setAttachments([]);
+    // Clear input
+    setNewMessage('');
     
-    // Update messages immediately
+    // Stop typing indicator
+    socket.emit('typing:stop', {
+      chatId: selectedChat._id,
+      userId: session.user.id
+    });
+
+    // Optimistic update
     setMessages(prev => [...prev, messageToSend]);
-    scrollToBottom();
+    lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
 
     try {
       // Save to database
-      const response = await fetch("/api/chat/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/chat/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content: messageToSend.content,
-          receiver: messageToSend.receiver,
-          attachments: messageToSend.attachments,
+          receiver: selectedChat._id,
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to send message");
+      if (!response.ok) throw new Error('Failed to send message');
       
       const savedMessage = await response.json();
 
       // Emit via socket
       if (socket && isConnected) {
-        socket.emit('send-message', {
+        socket.emit('message:send', {
           ...savedMessage,
           sender: session.user.id,
           receiver: selectedChat._id,
         });
       }
 
-      // Update message in state
+      // Update message in state with saved version
       setMessages(prev => 
         prev.map(msg => 
-          msg._id === messageToSend._id ? { ...savedMessage, status: "sent" } : msg
+          msg._id === messageToSend._id ? savedMessage : msg
         )
       );
     } catch (error) {
       console.error('Error sending message:', error);
-      setMessages(prev => 
-        prev.map(msg => 
-          msg._id === messageToSend._id ? { ...msg, status: "failed" } : msg
-        )
-      );
+      // Handle error state
     }
   };
 
   // Add this debug section to monitor socket and chat state
   
   
-  const handleTyping = (e) => {
-    setNewMessage(e.target.value);
-
-    if (!socket || !selectedChat?._id) return;
-
-    // Clear existing timeout
-    if (typingTimeout) clearTimeout(typingTimeout);
-
-    // Emit typing start
+  const handleTyping = () => {
+    if (!socket || !selectedChat || !session?.user?.id) return;
+  
+    // Emit typing start with user name
     socket.emit('typing:start', {
-      sender: session?.user?.id,
-      receiver: selectedChat._id
+      chatId: selectedChat._id,
+      userId: session.user.id,
+      userName: session.user.name
     });
-
+  
+    // Clear existing timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+  
     // Set new timeout
-    const timeout = setTimeout(() => {
+    typingTimeoutRef.current = setTimeout(() => {
       socket.emit('typing:stop', {
-        sender: session?.user?.id,
-        receiver: selectedChat._id
+        chatId: selectedChat._id,
+        userId: session.user.id,
+        userName: session.user.name
       });
     }, 1000);
-
-    setTypingTimeout(timeout);
   };
 
   const handleSelectChat = (connection) => {
@@ -683,6 +701,11 @@ export default function ChatPage() {
             </header>
 
             <div className={styles.messagesContainer}>
+            {typingUsers.size > 0 && (
+    <div className={styles.typingIndicator}>
+      <span>{Array.from(typingUsers)[0]} is typing...</span>
+    </div>
+  )}
               {loadingMessages && (
                 <div className={styles.loadingMessages}>
                   <div className={styles.spinner}></div>
@@ -821,7 +844,10 @@ export default function ChatPage() {
   type="text"
   placeholder="Type a message..."
   value={newMessage}
-  onChange={handleTyping}
+  onChange={(e) => {
+    setNewMessage(e.target.value);
+    handleTyping();
+  }}
   className={styles.messageInput}
   ref={messageInputRef}
   aria-label="Message input"

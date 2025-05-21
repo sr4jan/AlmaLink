@@ -2,8 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/chat/connections": "pages/api/chat/connections.js",
-  "/api/chat/messages/[userId]": "pages/api/chat/messages/[userId].js",
-  "/api/chat/messages": "pages/api/chat/messages.js",
   "/chat": "pages/chat.js"
 }

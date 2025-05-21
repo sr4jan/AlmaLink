@@ -1392,3 +1392,54 @@
   /* This will be applied globally through the styles.hidden class */
   
 }
+.typingIndicator {
+  padding: 8px 12px;
+  font-size: 0.8em;
+  color: #666;
+  font-style: italic;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.messageWrapper {
+  display: flex;
+  margin: 8px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sent {
+  justify-content: flex-end;
+}
+
+.received {
+  justify-content: flex-start;
+}
+
+.messageContent {
+  max-width: 70%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  position: relative;
+}
+
+.sent .messageContent {
+  background-color: #0084ff;
+  color: white;
+  border-radius: 12px 12px 0 12px;
+}
+
+.received .messageContent {
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 12px 12px 12px 0;
+}
