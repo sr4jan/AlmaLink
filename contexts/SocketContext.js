@@ -7,15 +7,21 @@ export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // Initialize socket connection
     const initSocket = async () => {
-      await fetch('/api/socket');
+      // Initialize socket connection
+      await fetch('/api/socketio');
+      
       const socketInstance = io(undefined, {
-        path: '/api/socket',
+        path: '/api/socketio',
+        addTrailingSlash: false,
       });
 
       socketInstance.on('connect', () => {
-        console.log('Connected to socket');
+        console.log('Socket connected:', socketInstance.id);
+      });
+
+      socketInstance.on('connect_error', (err) => {
+        console.error('Socket connection error:', err);
       });
 
       setSocket(socketInstance);

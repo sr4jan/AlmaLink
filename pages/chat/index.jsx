@@ -82,16 +82,18 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!socket || !session?.user?.id) return;
-  
-    // Join personal room
+
+    // Join user's room
     socket.emit('join-room', session.user.id);
-  
+    console.log('Joined room:', session.user.id);
+
     // Listen for new messages
     socket.on('receive-message', (message) => {
+      console.log('Received message:', message);
       setMessages(prev => [...prev, message]);
       scrollToBottom();
     });
-  
+
     return () => {
       socket.off('receive-message');
     };
@@ -226,31 +228,26 @@ export default function ChatPage() {
   const handleSendMessage = async (e) => {
     e?.preventDefault();
     if ((!newMessage.trim() && attachments.length === 0) || !selectedChat || !session?.user?.id) return;
-  
-    // Log the current user's ID
-    console.log('Sending message with user ID:', session.user.id);
-  
+
     const messageToSend = {
       _id: `temp-${Date.now()}`,
       content: newMessage.trim(),
-      sender: session.user.id, // Make sure this is a string
+      sender: session.user.id,
       receiver: selectedChat._id,
       createdAt: new Date().toISOString(),
       status: "sending",
       read: false,
       attachments: attachments.length > 0 ? [...attachments] : undefined,
     };
-  
-    // Log the message object
-    console.log('Message to send:', messageToSend);
-  
-    // Optimistic UI update
-    setMessages((prev) => [...prev, messageToSend]);
+
+    // Clear input and update UI optimistically
     setNewMessage("");
     setAttachments([]);
+    setMessages(prev => [...prev, messageToSend]);
     scrollToBottom();
-  
+
     try {
+      // Save to database
       const response = await fetch("/api/chat/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -260,32 +257,30 @@ export default function ChatPage() {
           attachments: messageToSend.attachments,
         }),
       });
-  
-      if (!response.ok) {
-        throw new Error((await response.json()).message || "Failed to send message");
+
+      if (!response.ok) throw new Error("Failed to send message");
+      
+      const savedMessage = await response.json();
+
+      // Emit via socket
+      if (socket?.connected) {
+        socket.emit('send-message', {
+          ...savedMessage,
+          sender: session.user.id,
+          receiver: selectedChat._id,
+        });
       }
-  
-      const sentMessage = await response.json();
-      console.log('Server response:', sentMessage);
-  
-      // Make sure to preserve the sender ID when updating the message
-      const updatedMessage = {
-        ...sentMessage,
-        sender: session.user.id, // Keep the sender as the current user's ID
-        status: "sent"
-      };
-  
-      // Replace temp message with actual message from server
-      setMessages((prev) => 
-        prev.map((msg) => 
-          msg._id === messageToSend._id ? updatedMessage : msg
+
+      // Update message in state
+      setMessages(prev => 
+        prev.map(msg => 
+          msg._id === messageToSend._id ? { ...savedMessage, status: "sent" } : msg
         )
       );
-    } catch (err) {
-      console.error("Error sending message:", err);
-      // Update failed message status
-      setMessages((prev) => 
-        prev.map((msg) => 
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setMessages(prev => 
+        prev.map(msg => 
           msg._id === messageToSend._id ? { ...msg, status: "failed" } : msg
         )
       );
