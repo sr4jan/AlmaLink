@@ -56,7 +56,7 @@ const formatLastMessageTime = (date) => {
 }
 
 export default function ChatPage() {
-  const socket = useSocket();
+  const { socket, isConnected } = useSocket();
   const { data: session, status } = useSession()
   const router = useRouter()
   const [connections, setConnections] = useState([])
@@ -81,23 +81,34 @@ export default function ChatPage() {
   const [typingTimeout, setTypingTimeout] = useState(null);
 
   useEffect(() => {
-    if (!socket || !session?.user?.id) return;
+    if (!socket || !session?.user?.id || !selectedChat) return;
 
     // Join user's room
     socket.emit('join-room', session.user.id);
     console.log('Joined room:', session.user.id);
 
-    // Listen for new messages
-    socket.on('receive-message', (message) => {
+    // Message handler function
+    const handleNewMessage = (message) => {
       console.log('Received message:', message);
-      setMessages(prev => [...prev, message]);
+      setMessages((prevMessages) => {
+        // Check if message already exists
+        const messageExists = prevMessages.some(msg => msg._id === message._id);
+        if (messageExists) {
+          return prevMessages;
+        }
+        return [...prevMessages, message];
+      });
       scrollToBottom();
-    });
-
-    return () => {
-      socket.off('receive-message');
     };
-  }, [socket, session?.user?.id]);
+
+    // Listen for new messages
+    socket.on('receive-message', handleNewMessage);
+
+    // Cleanup
+    return () => {
+      socket.off('receive-message', handleNewMessage);
+    };
+  }, [socket, session?.user?.id, selectedChat]);
 
   // --- Effects ---
   useEffect(() => {
@@ -262,8 +273,8 @@ export default function ChatPage() {
       
       const savedMessage = await response.json();
 
-      // Emit via socket
-      if (socket?.connected) {
+      // Emit via socket if connected
+      if (socket && isConnected) {
         socket.emit('send-message', {
           ...savedMessage,
           sender: session.user.id,
@@ -286,6 +297,7 @@ export default function ChatPage() {
       );
     }
   };
+  
   
   const handleTyping = (e) => {
     setNewMessage(e.target.value);

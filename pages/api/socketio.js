@@ -16,10 +16,13 @@ const ioHandler = (req, res) => {
         methods: ['GET', 'POST'],
       },
       transports: ['websocket', 'polling'],
+      pingTimeout: 60000,
+      pingInterval: 25000,
     });
 
+    // Connected socket handling
     io.on('connection', (socket) => {
-      console.log('Socket connected:', socket.id);
+      console.log('Client connected:', socket.id);
 
       socket.on('join-room', (userId) => {
         if (userId) {
@@ -29,14 +32,17 @@ const ioHandler = (req, res) => {
       });
 
       socket.on('send-message', (message) => {
-        console.log('Message received:', message);
+        console.log('Broadcasting message:', message);
         if (message.receiver) {
-          socket.to(message.receiver).emit('receive-message', message);
+          // Broadcast to receiver's room
+          io.to(message.receiver).emit('receive-message', message);
+          // Also send confirmation back to sender
+          socket.emit('message-sent', message._id);
         }
       });
 
       socket.on('disconnect', () => {
-        console.log('Socket disconnected:', socket.id);
+        console.log('Client disconnected:', socket.id);
       });
     });
 
