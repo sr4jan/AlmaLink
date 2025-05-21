@@ -20,7 +20,6 @@ const ioHandler = (req, res) => {
       pingInterval: 25000,
     });
 
-    // Connected socket handling
     io.on('connection', (socket) => {
       console.log('Client connected:', socket.id);
 
@@ -36,8 +35,8 @@ const ioHandler = (req, res) => {
         if (message.receiver) {
           // Broadcast to receiver's room
           io.to(message.receiver).emit('receive-message', message);
-          // Also send confirmation back to sender
-          socket.emit('message-sent', message._id);
+          // Also send back to sender's room (to update other tabs/windows)
+          io.to(message.sender).emit('receive-message', message);
         }
       });
 

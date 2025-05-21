@@ -81,30 +81,56 @@ export default function ChatPage() {
   const [typingTimeout, setTypingTimeout] = useState(null);
 
   useEffect(() => {
+    const loadMessages = async () => {
+      if (!selectedChat?._id) return;
+      
+      try {
+        const response = await fetch(`/api/chat/messages/${selectedChat._id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setMessages(data);
+          scrollToBottom();
+        }
+      } catch (error) {
+        console.error('Error loading messages:', error);
+      }
+    };
+
+    loadMessages();
+  }, [selectedChat?._id]);
+
+  useEffect(() => {
     if (!socket || !session?.user?.id || !selectedChat) return;
 
-    // Join user's room
+    // Join personal room
     socket.emit('join-room', session.user.id);
     console.log('Joined room:', session.user.id);
 
-    // Message handler function
+    // Message handler
     const handleNewMessage = (message) => {
       console.log('Received message:', message);
-      setMessages((prevMessages) => {
-        // Check if message already exists
-        const messageExists = prevMessages.some(msg => msg._id === message._id);
-        if (messageExists) {
-          return prevMessages;
-        }
-        return [...prevMessages, message];
-      });
-      scrollToBottom();
+      
+      // Only update messages if it's relevant to current chat
+      if (message.sender === selectedChat._id || message.receiver === selectedChat._id) {
+        setMessages(prevMessages => {
+          // Check if message already exists
+          const messageExists = prevMessages.some(msg => msg._id === message._id);
+          if (messageExists) {
+            return prevMessages;
+          }
+          const newMessages = [...prevMessages, message];
+          // Sort messages by date
+          return newMessages.sort((a, b) => 
+            new Date(a.createdAt) - new Date(b.createdAt)
+          );
+        });
+        scrollToBottom();
+      }
     };
 
     // Listen for new messages
     socket.on('receive-message', handleNewMessage);
 
-    // Cleanup
     return () => {
       socket.off('receive-message', handleNewMessage);
     };
@@ -254,6 +280,8 @@ export default function ChatPage() {
     // Clear input and update UI optimistically
     setNewMessage("");
     setAttachments([]);
+    
+    // Update messages immediately
     setMessages(prev => [...prev, messageToSend]);
     scrollToBottom();
 
@@ -273,7 +301,7 @@ export default function ChatPage() {
       
       const savedMessage = await response.json();
 
-      // Emit via socket if connected
+      // Emit via socket
       if (socket && isConnected) {
         socket.emit('send-message', {
           ...savedMessage,
@@ -297,6 +325,8 @@ export default function ChatPage() {
       );
     }
   };
+
+  // Add this debug section to monitor socket and chat state
   
   
   const handleTyping = (e) => {

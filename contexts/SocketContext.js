@@ -6,13 +6,16 @@ const SocketContext = createContext();
 export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [lastError, setLastError] = useState(null);
 
   useEffect(() => {
+    let socketInstance;
+
     const initSocket = async () => {
       try {
         await fetch('/api/socketio');
         
-        const socketInstance = io(undefined, {
+        socketInstance = io(undefined, {
           path: '/api/socketio',
           addTrailingSlash: false,
           reconnection: true,
@@ -26,38 +29,44 @@ export function SocketProvider({ children }) {
         socketInstance.on('connect', () => {
           console.log('Socket connected:', socketInstance.id);
           setIsConnected(true);
+          setLastError(null);
         });
 
-        socketInstance.on('disconnect', () => {
-          console.log('Socket disconnected');
+        socketInstance.on('disconnect', (reason) => {
+          console.log('Socket disconnected:', reason);
           setIsConnected(false);
         });
 
-        socketInstance.on('connect_error', (err) => {
-          console.error('Socket connection error:', err);
+        socketInstance.on('connect_error', (error) => {
+          console.error('Connection error:', error);
+          setLastError(error.message);
           setIsConnected(false);
+        });
+
+        socketInstance.on('error', (error) => {
+          console.error('Socket error:', error);
+          setLastError(error.message);
         });
 
         setSocket(socketInstance);
       } catch (error) {
         console.error('Socket initialization error:', error);
+        setLastError(error.message);
       }
     };
 
     initSocket();
 
     return () => {
-      if (socket) {
-        socket.off('connect');
-        socket.off('disconnect');
-        socket.off('connect_error');
-        socket.close();
+      if (socketInstance) {
+        socketInstance.removeAllListeners();
+        socketInstance.close();
       }
     };
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
+    <SocketContext.Provider value={{ socket, isConnected, lastError }}>
       {children}
     </SocketContext.Provider>
   );
