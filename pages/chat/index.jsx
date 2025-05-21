@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { useSocket } from '@/contexts/SocketContext';
 import { format, isToday, isYesterday, formatDistanceToNowStrict } from "date-fns"
 import {
   Search,
@@ -55,6 +56,7 @@ const formatLastMessageTime = (date) => {
 }
 
 export default function ChatPage() {
+  const socket = useSocket();
   const { data: session, status } = useSession()
   const router = useRouter()
   const [connections, setConnections] = useState([])
@@ -74,6 +76,26 @@ export default function ChatPage() {
   const fileInputRef = useRef(null)
   const messageInputRef = useRef(null)
   const emojiPickerRef = useRef(null)
+
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingTimeout, setTypingTimeout] = useState(null);
+
+  useEffect(() => {
+    if (!socket || !session?.user?.id) return;
+  
+    // Join personal room
+    socket.emit('join-room', session.user.id);
+  
+    // Listen for new messages
+    socket.on('receive-message', (message) => {
+      setMessages(prev => [...prev, message]);
+      scrollToBottom();
+    });
+  
+    return () => {
+      socket.off('receive-message');
+    };
+  }, [socket, session?.user?.id]);
 
   // --- Effects ---
   useEffect(() => {
@@ -202,27 +224,32 @@ export default function ChatPage() {
 
   // --- Event Handlers ---
   const handleSendMessage = async (e) => {
-    e?.preventDefault()
-    if ((!newMessage.trim() && attachments.length === 0) || !selectedChat || !session?.user?.id) return
-
-    const tempMessageId = `temp-${Date.now()}`
+    e?.preventDefault();
+    if ((!newMessage.trim() && attachments.length === 0) || !selectedChat || !session?.user?.id) return;
+  
+    // Log the current user's ID
+    console.log('Sending message with user ID:', session.user.id);
+  
     const messageToSend = {
-      _id: tempMessageId,
-      content: newMessage,
-      sender: session.user.id,
+      _id: `temp-${Date.now()}`,
+      content: newMessage.trim(),
+      sender: session.user.id, // Make sure this is a string
       receiver: selectedChat._id,
       createdAt: new Date().toISOString(),
       status: "sending",
       read: false,
       attachments: attachments.length > 0 ? [...attachments] : undefined,
-    }
-
+    };
+  
+    // Log the message object
+    console.log('Message to send:', messageToSend);
+  
     // Optimistic UI update
-    setMessages((prev) => [...prev, messageToSend])
-    setNewMessage("")
-    setAttachments([])
-    scrollToBottom()
-
+    setMessages((prev) => [...prev, messageToSend]);
+    setNewMessage("");
+    setAttachments([]);
+    scrollToBottom();
+  
     try {
       const response = await fetch("/api/chat/messages", {
         method: "POST",
@@ -232,23 +259,63 @@ export default function ChatPage() {
           receiver: messageToSend.receiver,
           attachments: messageToSend.attachments,
         }),
-      })
-
+      });
+  
       if (!response.ok) {
-        throw new Error((await response.json()).message || "Failed to send message")
+        throw new Error((await response.json()).message || "Failed to send message");
       }
-
-      const sentMessage = await response.json()
-
+  
+      const sentMessage = await response.json();
+      console.log('Server response:', sentMessage);
+  
+      // Make sure to preserve the sender ID when updating the message
+      const updatedMessage = {
+        ...sentMessage,
+        sender: session.user.id, // Keep the sender as the current user's ID
+        status: "sent"
+      };
+  
       // Replace temp message with actual message from server
-      setMessages((prev) => prev.map((msg) => (msg._id === tempMessageId ? { ...sentMessage, status: "sent" } : msg)))
+      setMessages((prev) => 
+        prev.map((msg) => 
+          msg._id === messageToSend._id ? updatedMessage : msg
+        )
+      );
     } catch (err) {
-      console.error("Error sending message:", err)
-      setError(`Failed to send: ${err.message}`)
-      // Update message status to failed
-      setMessages((prev) => prev.map((msg) => (msg._id === tempMessageId ? { ...msg, status: "failed" } : msg)))
+      console.error("Error sending message:", err);
+      // Update failed message status
+      setMessages((prev) => 
+        prev.map((msg) => 
+          msg._id === messageToSend._id ? { ...msg, status: "failed" } : msg
+        )
+      );
     }
-  }
+  };
+  
+  const handleTyping = (e) => {
+    setNewMessage(e.target.value);
+
+    if (!socket || !selectedChat?._id) return;
+
+    // Clear existing timeout
+    if (typingTimeout) clearTimeout(typingTimeout);
+
+    // Emit typing start
+    socket.emit('typing:start', {
+      sender: session?.user?.id,
+      receiver: selectedChat._id
+    });
+
+    // Set new timeout
+    const timeout = setTimeout(() => {
+      socket.emit('typing:stop', {
+        sender: session?.user?.id,
+        receiver: selectedChat._id
+      });
+    }, 1000);
+
+    setTypingTimeout(timeout);
+  };
 
   const handleSelectChat = (connection) => {
     if (selectedChat?._id !== connection._id) {
@@ -605,62 +672,50 @@ export default function ChatPage() {
                 </div>
               )}
 
-              {!loadingMessages &&
-                messages.map((message, index) => {
-                  const showDateDivider =
-                    index === 0 ||
-                    new Date(messages[index - 1].createdAt).toDateString() !==
-                      new Date(message.createdAt).toDateString()
+{!loadingMessages &&
+  messages.map((message, index) => {
+    const showDateDivider = index === 0 || (
+      index > 0 && 
+      new Date(message.createdAt).toDateString() !== 
+      new Date(messages[index - 1].createdAt).toDateString()
+    );
 
-                  const isCurrentUser = message.sender === session?.user?.id
+    const messageSenderId = typeof message.sender === 'object' 
+      ? message.sender._id 
+      : message.sender;
+    
+    const currentUserId = session?.user?.id;
+    const isCurrentUser = String(messageSenderId) === String(currentUserId);
 
-                  return (
-                    <div key={message._id || `msg-${index}`}>
-                      {showDateDivider && (
-                        <div className={styles.dateDivider}>
-                          <span>{format(new Date(message.createdAt), "EEEE, MMMM d")}</span>
-                        </div>
-                      )}
-                      <div className={`${styles.messageWrapper} ${isCurrentUser ? styles.sent : styles.received}`}>
-                        <div className={styles.messageContent}>
-                          {message.content && <div className={styles.messageText}>{message.content}</div>}
+    return (
+      <div key={message._id || `msg-${index}`}>
+        {showDateDivider && (
+          <div className={styles.dateDivider}>
+            <span>{format(new Date(message.createdAt), "EEEE, MMMM d")}</span>
+          </div>
+        )}
+        <div 
+          className={`${styles.messageWrapper} ${
+            isCurrentUser ? styles.sent : styles.received
+          }`}
+        >
+          <div className={styles.messageContent}>
+            {/* Message content without debug info */}
+            <div className={styles.messageText}>
+              {message.content}
+            </div>
 
-                          {message.attachments?.map((attachment, i) => (
-                            <div key={i} className={styles.attachment}>
-                              {attachment.type?.startsWith("image") ? (
-                                <img
-                                  src={attachment.url || "/placeholder.svg"}
-                                  alt={attachment.name || "Attachment"}
-                                  className={styles.attachmentImage}
-                                />
-                              ) : (
-                                <a
-                                  href={attachment.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className={styles.attachmentLink}
-                                >
-                                  <Paperclip size={14} />
-                                  <span>{attachment.name || "Attached File"}</span>
-                                </a>
-                              )}
-                            </div>
-                          ))}
-
-                          <div className={styles.messageInfo}>
-                            <span
-                              className={styles.timestamp}
-                              data-full-time={format(new Date(message.createdAt), "PPpp")}
-                            >
-                              {formatTimestamp(message.createdAt)}
-                            </span>
-                            {isCurrentUser && renderMessageStatus(message)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
+            <div className={styles.messageInfo}>
+              <span className={styles.timestamp}>
+                {formatTimestamp(message.createdAt)}
+              </span>
+              {isCurrentUser && renderMessageStatus(message)}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  })}
               <div ref={messagesEndRef} />
             </div>
 
@@ -729,7 +784,7 @@ export default function ChatPage() {
   type="text"
   placeholder="Type a message..."
   value={newMessage}
-  onChange={(e) => setNewMessage(e.target.value)}
+  onChange={handleTyping}
   className={styles.messageInput}
   ref={messageInputRef}
   aria-label="Message input"
@@ -739,6 +794,7 @@ export default function ChatPage() {
     // Use the global class for mobile nav since it's in a different component
     document.querySelector('.mobileNav')?.classList.add(styles.hidden);
   }}
+  
   onBlur={() => {
     setTimeout(() => {
       document.querySelector(`.${styles.chatPageContainer}`)?.classList.remove(styles.inputFocused);

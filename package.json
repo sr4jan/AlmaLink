@@ -25,6 +25,7 @@
     "date-fns": "^4.1.0",
     "docx-parser": "^0.2.1",
     "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "formidable": "^3.5.4",
     "framer-motion": "^12.7.4",
     "jsonwebtoken": "^9.0.2",
