@@ -1,32 +1,50 @@
+// pages/api/pusher/auth.js
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]";
-import { pusherServer } from '@/lib/pusher';
-import User from "@/models/User";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import pusher from "@/lib/pusher";
 
 export default async function handler(req, res) {
   try {
-    const session = await getServerSession(req, res, authOptions)
+    if (req.method !== 'POST') {
+      return res.status(405).json({ message: 'Method not allowed' });
+    }
+
+    const session = await getServerSession(req, res, authOptions);
+    
     if (!session) {
-      return res.status(401).json({ message: 'Unauthorized' })
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const currentUser = await User.findOne({ email: session.user.email });
-    if (!currentUser) {
-      return res.status(404).json({ message: "User not found" });
+    // Parse socket_id and channel_name from request body
+    const { socket_id, channel_name } = req.body;
+
+    // Validate required parameters
+    if (!socket_id) {
+      return res.status(400).json({ message: 'Missing socket_id' });
     }
 
-    const socketId = req.body.socket_id;
-    const channel = req.body.channel_name;
-
-    // Only authorize if it's the user's private channel
-    if (!channel.includes(`private-chat-${currentUser._id}`)) {
-      return res.status(403).json({ message: 'Forbidden' });
+    if (!channel_name) {
+      return res.status(400).json({ message: 'Missing channel_name' });
     }
 
-    const authResponse = pusherServer.authorizeChannel(socketId, channel);
-    res.send(authResponse);
+    // Create presence data
+    const presenceData = {
+      user_id: session.user.id,
+      user_info: {
+        name: session.user.name,
+        email: session.user.email,
+        image: session.user.image
+      }
+    };
+
+    // Authorize the channel
+    const auth = await pusher.authorizeChannel(socket_id, channel_name, presenceData);
+    res.json(auth);
   } catch (error) {
-    console.error('Pusher auth error:', error);
-    res.status(500).json({ message: 'Error authorizing channel' });
+    console.error('Pusher Auth Error:', error);
+    res.status(500).json({ 
+      message: 'Error authenticating Pusher channel',
+      error: error.message 
+    });
   }
 }

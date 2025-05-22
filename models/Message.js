@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const MessageSchema = new mongoose.Schema({
+const messageSchema = new mongoose.Schema({
+  content: String,
   sender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -11,26 +12,20 @@ const MessageSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  content: {
-    type: String,
-    default: ''
+  createdAt: {
+    type: Date,
+    default: Date.now
   },
-  read: {
-    type: Boolean,
-    default: false
+  status: {
+    type: String,
+    enum: ['sending', 'sent', 'delivered', 'read', 'failed'],
+    default: 'sending'
   },
   attachments: [{
     url: String,
-    name: String,
-    type: String
+    type: String,
+    name: String
   }]
-}, {
-  timestamps: true
-});
+})
 
-// Ensure indexes for better query performance
-MessageSchema.index({ sender: 1, receiver: 1 });
-MessageSchema.index({ createdAt: -1 });
-
-// Delete check - don't create the model if it already exists
-export default mongoose.models.Message || mongoose.model('Message', MessageSchema);
+export default mongoose.models.Message || mongoose.model('Message', messageSchema)

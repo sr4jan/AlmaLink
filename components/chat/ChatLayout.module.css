@@ -1,0 +1,144 @@
+.chatLayout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    height: calc(100vh - 100px); /* Adjust 64px to match your navbar height */
+    margin-top: 100px;
+    background: var(--bg-primary);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px var(--shadow-light);
+    position: relative;
+  }
+  
+  .sidebar {
+    background: var(--bg-elevated);
+    border-right: 1px solid var(--border-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .mainArea {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-secondary);
+    position: relative;
+  }
+  
+  .profileDrawer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 320px;
+    background: var(--bg-elevated);
+    border-left: 1px solid var(--border-color);
+    z-index: 10;
+  }
+  
+  /* Dark mode */
+  :global(.dark) .chatLayout {
+    background: var(--bg-dark);
+  }
+  
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .chatLayout {
+      grid-template-columns: 1fr;
+      margin-top: 60px;
+      height: calc(100vh - 56px); /* Account for navbar and mobile nav */
+      border-radius: 0;
+    }
+  
+    .sidebar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      z-index: 20;
+    }
+  
+    .profileDrawer {
+      width: 100%;
+      z-index: 30;
+    }
+  }
+  
+  /* Animations */
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+  
+  .profileDrawer {
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  .profileDrawer.closing {
+    animation: slideOut 0.3s ease-in;
+  }
+  /* Add these styles to ChatLayout.module.css */
+.welcomeScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+  
+  .welcomeScreen h2 {
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar {
+      display: none;
+    }
+  
+    .sidebar.visible {
+      display: block;
+    }
+  
+    .mainArea {
+      display: none;
+    }
+  
+    .sidebar.visible + .mainArea {
+      display: none;
+    }
+  
+    .sidebar:not(.visible) + .mainArea {
+      display: flex;
+    }
+  }
+  @supports (padding: max(0px)) {
+    .chatLayout {
+      height: calc(100vh - 64px); /* Navbar height */
+      height: calc(-webkit-fill-available - 64px); /* For iOS */
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  
+    @media (max-width: 768px) {
+      .chatLayout {
+        height: calc(100vh - 56px); /* Mobile navbar height */
+        height: calc(-webkit-fill-available - 56px); /* For iOS */
+      }
+    }
+  }

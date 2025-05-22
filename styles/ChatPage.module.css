@@ -1,0 +1,39 @@
+/* pages/chat/ChatPage.module.css */
+.pageContainer {
+    width: 100%;
+    position: relative;
+    background: var(--bg-main);
+  }
+  
+  .loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 64px); /* Subtract navbar height */
+    margin-top: 64px; /* Add navbar height as margin */
+    width: 100%;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .loadingContainer {
+      height: calc(100vh - 56px); /* Mobile navbar height */
+      margin-top: 56px; /* Mobile navbar height */
+    }
+  }

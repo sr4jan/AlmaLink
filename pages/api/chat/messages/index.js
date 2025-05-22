@@ -1,66 +1,137 @@
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "../../auth/[...nextauth]"
-import dbConnect from "@/lib/mongodb"
-import Message from "@/models/Message"
-import User from "@/models/User"
-import { pusherServer } from '@/lib/pusher'
+// pages/api/chat/messages/index.js
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import dbConnect from "@/lib/mongodb";
+import Message from "@/models/Message";
+import User from "@/models/User";
+import mongoose from "mongoose";
+import pusher from "@/lib/pusher"; // Make sure this import is correct
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' })
-  }
-
   try {
-    const session = await getServerSession(req, res, authOptions)
+    const session = await getServerSession(req, res, authOptions);
+    
     if (!session) {
-      return res.status(401).json({ message: 'Unauthorized' })
+      return res.status(401).json({ 
+        success: false,
+        message: "Unauthorized" 
+      });
     }
 
-    await dbConnect()
+    await dbConnect();
 
     // Get current user
-    const currentUser = await User.findOne({ email: session.user.email })
+    const currentUser = await User.findOne({ email: session.user.email });
     if (!currentUser) {
-      return res.status(404).json({ message: 'User not found' })
+      return res.status(404).json({ 
+        success: false,
+        message: "User not found" 
+      });
     }
 
-    const { content, receiver } = req.body
+    if (req.method === 'GET') {
+      const { chatId } = req.query;
 
-    if (!content || !receiver) {
-      return res.status(400).json({ message: 'Missing required fields' })
+      if (!chatId || !mongoose.Types.ObjectId.isValid(chatId)) {
+        return res.status(400).json({ 
+          success: false,
+          message: "Invalid chat ID" 
+        });
+      }
+
+      // Find messages between current user and chat partner
+      const messages = await Message.find({
+        $or: [
+          { sender: currentUser._id, receiver: chatId },
+          { sender: chatId, receiver: currentUser._id }
+        ]
+      })
+      .sort({ createdAt: 1 })
+      .limit(100);
+
+      // Format messages for frontend
+      const formattedMessages = messages.map(msg => ({
+        _id: msg._id.toString(),
+        content: msg.content,
+        sender: msg.sender.toString(),
+        receiver: msg.receiver.toString(),
+        createdAt: msg.createdAt,
+        status: msg.status,
+        attachments: msg.attachments || []
+      }));
+
+      return res.status(200).json({
+        success: true,
+        messages: formattedMessages
+      });
     }
 
-    // Create and save the message
-    const message = await Message.create({
-      content,
-      sender: currentUser._id,
-      receiver,
-    })
+    if (req.method === 'POST') {
+      const { content, receiver } = req.body;
 
-    // Populate sender and receiver details
-    await message.populate('sender', 'username email profile')
-    await message.populate('receiver', 'username email profile')
+      if (!content || !receiver) {
+        return res.status(400).json({ 
+          success: false,
+          message: "Missing required fields" 
+        });
+      }
 
-    // Trigger Pusher events
-    await pusherServer.trigger(
-      `private-chat-${receiver}`,
-      'message:new',
-      message
-    )
+      if (!mongoose.Types.ObjectId.isValid(receiver)) {
+        return res.status(400).json({ 
+          success: false,
+          message: "Invalid receiver ID" 
+        });
+      }
 
-    // Also notify sender's other devices
-    await pusherServer.trigger(
-      `private-chat-${currentUser._id}`,
-      'message:new',
-      message
-    )
+      const newMessage = await Message.create({
+        content,
+        sender: currentUser._id,
+        receiver,
+        status: 'sent'
+      });
 
-    return res.status(200).json(message)
+      const formattedMessage = {
+        _id: newMessage._id.toString(),
+        content: newMessage.content,
+        sender: newMessage.sender.toString(),
+        receiver: newMessage.receiver.toString(),
+        createdAt: newMessage.createdAt,
+        status: newMessage.status,
+        attachments: newMessage.attachments || []
+      };
+
+      try {
+        // Try to trigger Pusher event
+        const channelName = `private-chat-${[currentUser._id.toString(), receiver].sort().join('-')}`;
+        if (pusher) {
+          await pusher.trigger(channelName, 'client-message', formattedMessage)
+            .catch(error => {
+              console.error('Pusher trigger error:', error);
+              // Don't throw error, just log it
+            });
+        }
+      } catch (pusherError) {
+        console.error('Pusher error:', pusherError);
+        // Don't throw error, continue with response
+      }
+
+      return res.status(201).json({
+        success: true,
+        data: formattedMessage
+      });
+    }
+
+    return res.status(405).json({ 
+      success: false,
+      message: "Method not allowed" 
+    });
+
   } catch (error) {
-    console.error('Message API Error:', error)
+    console.error('Messages API Error:', error);
     return res.status(500).json({ 
-      message: 'Error sending message',
+      success: false,
+      message: "Server error",
       error: error.message 
-    })
+    });
   }
 }
