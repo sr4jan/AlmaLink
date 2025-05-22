@@ -301,3 +301,19 @@ body {
 :global(.dark) .sidebar {
   background: var(--bg-elevated-dark);
 }
+:root {
+  /* ... your other variables ... */
+  --keyboard-height: 0px;
+}
+
+/* iOS viewport height fix */
+@supports (-webkit-touch-callout: none) {
+  .chatArea {
+    height: -webkit-fill-available;
+  }
+}
+@media (max-width: 768px) {
+  :global(.mobileNav) {
+    display: none;
+  }
+}

@@ -20,6 +20,42 @@ export default function ChatArea({ onBackClick, onProfileClick }) {
     onlineUsers,
     refreshMessages
   } = useChat();
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const chatAreaRef = useRef(null);
+  // Add to your ChatArea component
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleVisualViewportResize = () => {
+        if (!window.visualViewport) return;
+        
+        const currentHeight = window.visualViewport.height;
+        const keyboardHeight = window.innerHeight - currentHeight;
+        
+        // Update keyboard height CSS variable
+        document.documentElement.style.setProperty(
+          '--keyboard-height',
+          `${keyboardHeight}px`
+        );
+        
+        setKeyboardHeight(keyboardHeight);
+        setKeyboardVisible(keyboardHeight > 150);
+      };
+
+      // Add visualViewport listeners
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleVisualViewportResize);
+        window.visualViewport.addEventListener('scroll', handleVisualViewportResize);
+      }
+
+      return () => {
+        if (window.visualViewport) {
+          window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
+          window.visualViewport.removeEventListener('scroll', handleVisualViewportResize);
+        }
+      };
+    }
+  }, []);
 
   const scrollToBottom = (behavior = 'smooth') => {
     if (messagesEndRef.current) {
@@ -59,6 +95,15 @@ export default function ChatArea({ onBackClick, onProfileClick }) {
   }
 
   return (
+    <div 
+      ref={chatAreaRef}
+      className={`${styles.chatArea} ${
+        keyboardVisible ? styles.keyboardVisible : ''
+      }`}
+      style={{
+        '--keyboard-height': `${keyboardHeight}px`
+      }}
+    >
     <div className={styles.chatArea}>
       <div className={styles.header}>
         <button className={styles.backButton} onClick={onBackClick}>
@@ -168,6 +213,7 @@ export default function ChatArea({ onBackClick, onProfileClick }) {
       )}
 
       <ChatInput />
+    </div>
     </div>
   );
 }
