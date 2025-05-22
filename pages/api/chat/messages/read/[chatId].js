@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "../../auth/[...nextauth]"
+import { authOptions } from "../../../auth/[...nextauth]"
 import dbConnect from "@/lib/mongodb"
 import Message from "@/models/Message"
 
