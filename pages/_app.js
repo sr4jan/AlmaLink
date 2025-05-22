@@ -2,11 +2,11 @@ import '@/styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { Toaster } from "react-hot-toast";
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { SocketProvider } from '@/contexts/SocketContext'; 
+import { ThemeProvider } from '@/contexts/ThemeContext'; 
 import Navbar from "@/components/Navbar";
 import "@/styles/globals.css";
 import "@/styles/themes.css";
+import { ChatProvider } from '@/contexts/ChatContext'
 
 const AiChatBubble = dynamic(
   () => import('@/components/AiChatBubble'),
@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <ThemeProvider>
       <SessionProvider session={session}>
-        <SocketProvider>
+      <ChatProvider>
           <Navbar />
           <Component {...pageProps} />
           <AiChatBubble />
@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
               },
             }} 
           />
-        </SocketProvider>
+          </ChatProvider>
       </SessionProvider>
     </ThemeProvider>
   );

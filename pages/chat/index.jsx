@@ -2,8 +2,8 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useSocket } from '@/contexts/SocketContext';
 import { format, isToday, isYesterday, formatDistanceToNowStrict } from "date-fns"
+import { useChat } from '@/contexts/ChatContext'
 import {
   Search,
   Send,
@@ -56,13 +56,11 @@ const formatLastMessageTime = (date) => {
 }
 
 export default function ChatPage() {
-  const [typingUsers, setTypingUsers] = useState(new Set());
-  const { socket, isConnected } = useSocket();
   const { data: session, status } = useSession()
   const router = useRouter()
+  const { typingUsers, messages, setMessages, sendMessage, sendTypingIndicator } = useChat() // Add this line
   const [connections, setConnections] = useState([])
   const [selectedChat, setSelectedChat] = useState(null)
-  const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState("")
   const [loading, setLoading] = useState(true)
   const [loadingMessages, setLoadingMessages] = useState(false)
@@ -77,11 +75,8 @@ export default function ChatPage() {
   const fileInputRef = useRef(null)
   const messageInputRef = useRef(null)
   const emojiPickerRef = useRef(null)
-  const lastMessageRef = useRef(null);
-  const typingTimeoutRef = useRef(null);
-
-  const [isTyping, setIsTyping] = useState(false);
-  const [typingTimeout, setTypingTimeout] = useState(null);
+  const lastMessageRef = useRef(null)
+  const typingTimeoutRef = useRef(null)
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -102,7 +97,6 @@ export default function ChatPage() {
     loadMessages();
   }, [selectedChat?._id]);
 
-  
   // --- Effects ---
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -211,15 +205,7 @@ export default function ChatPage() {
       const response = await fetch(`/api/chat/messages/${chatId}`)
       if (!response.ok) throw new Error((await response.json()).message || "Failed to fetch messages")
       const data = await response.json()
-      // Add dummy sender/receiver and read status for UI demo if needed
-      const messagesWithDemoData = data.map((msg, index) => ({
-        ...msg,
-        sender: msg.sender || (index % 2 === 0 ? session?.user?.id : selectedChat?._id),
-        read: msg.read === undefined ? (msg.sender === session?.user?.id ? Math.random() > 0.3 : undefined) : msg.read,
-        createdAt:
-          msg.createdAt || new Date(Date.now() - Math.random() * 1000 * 60 * 60 * (data.length - index)).toISOString(),
-      }))
-      setMessages(messagesWithDemoData)
+      setMessages(data) // This will now use the context's setMessages
     } catch (err) {
       console.error("Error fetching messages:", err)
       setError(err.message)
@@ -249,135 +235,66 @@ export default function ChatPage() {
     }
   }, [selectedChat, lastMessageRef]); // Add lastMessageRef to dependencies
  // In your ChatPage component
-useEffect(() => {
-  if (!socket || !session?.user?.id || !isConnected) return;
 
-  // Only set up listeners once connected
-  console.log('Setting up socket listeners for user:', session.user.id);
-  
-  // Announce user is online
-  socket.emit('user:online', session.user.id);
-  
-  // Handle incoming messages
-  socket.on('message:received', handleNewMessage);
-  socket.on('message:sent', handleNewMessage);
-  
-  // Handle typing indicators
-  socket.on('typing:started', ({ userId, userName }) => {
-    setTypingUsers(prev => {
-      const newSet = new Set([...prev]);
-      newSet.add(userName || userId);
-      return newSet;
-    });
-  });
-  
-  socket.on('typing:stopped', ({ userId, userName }) => {
-    setTypingUsers(prev => {
-      const newSet = new Set([...prev]);
-      newSet.delete(userName || userId);
-      return newSet;
-    });
-  });
-
-  return () => {
-    if (socket) {
-      console.log('Removing socket listeners');
-      socket.off('message:received');
-      socket.off('message:sent');
-      socket.off('typing:started');
-      socket.off('typing:stopped');
-    }
-  };
-}, [socket, session?.user?.id, isConnected, handleNewMessage]); // Added handleNewMessage to dependencies
   // --- Event Handlers ---
   const handleSendMessage = async (e) => {
-    e?.preventDefault();
-    if (!newMessage.trim() || !selectedChat || !session?.user?.id) return;
-
-    const messageToSend = {
-      _id: `temp-${Date.now()}`,
-      content: newMessage.trim(),
-      sender: session.user.id,
-      receiver: selectedChat._id,
-      createdAt: new Date().toISOString(),
-    };
-
-    // Clear input
-    setNewMessage('');
-    
-    // Stop typing indicator
-    socket.emit('typing:stop', {
-      chatId: selectedChat._id,
-      userId: session.user.id
-    });
-
+    e?.preventDefault()
+    if (!newMessage.trim() || !selectedChat || !session?.user?.email) return
+  
+    const messageContent = newMessage.trim()
+    setNewMessage('')
+  
     // Optimistic update
-    setMessages(prev => [...prev, messageToSend]);
-    lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
-
+    const tempMessage = {
+      _id: `temp-${Date.now()}`,
+      content: messageContent,
+      sender: {
+        _id: session.user.id,
+        email: session.user.email,
+        username: session.user.name
+      },
+      receiver: selectedChat,
+      createdAt: new Date().toISOString(),
+      status: 'sending'
+    }
+  
+    setMessages(prev => [...prev, tempMessage])
+    scrollToBottom()
+  
     try {
-      // Save to database
-      const response = await fetch('/api/chat/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content: messageToSend.content,
-          receiver: selectedChat._id,
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to send message');
-      
-      const savedMessage = await response.json();
-
-      // Emit via socket
-      if (socket && isConnected) {
-        socket.emit('message:send', {
-          ...savedMessage,
-          sender: session.user.id,
-          receiver: selectedChat._id,
-        });
-      }
-
-      // Update message in state with saved version
+      const savedMessage = await sendMessage(messageContent, selectedChat._id)
+      // Update the temporary message with the saved one
       setMessages(prev => 
         prev.map(msg => 
-          msg._id === messageToSend._id ? savedMessage : msg
+          msg._id === tempMessage._id ? savedMessage : msg
         )
-      );
+      )
     } catch (error) {
-      console.error('Error sending message:', error);
-      // Handle error state
+      console.error('Error sending message:', error)
+      // Remove failed message or mark as failed
+      setMessages(prev => 
+        prev.map(msg => 
+          msg._id === tempMessage._id 
+            ? { ...msg, status: 'failed' } 
+            : msg
+        )
+      )
     }
-  };
+  }
+  
+  const handleTyping = useCallback(() => {
+    if (!selectedChat?._id) return
 
-  // Add this debug section to monitor socket and chat state
-  
-  
-  const handleTyping = () => {
-    if (!socket || !selectedChat || !session?.user?.id) return;
-  
-    // Emit typing start with user name
-    socket.emit('typing:start', {
-      chatId: selectedChat._id,
-      userId: session.user.id,
-      userName: session.user.name
-    });
-  
-    // Clear existing timeout
+    sendTypingIndicator(selectedChat._id, true)
+
     if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
+      clearTimeout(typingTimeoutRef.current)
     }
-  
-    // Set new timeout
+
     typingTimeoutRef.current = setTimeout(() => {
-      socket.emit('typing:stop', {
-        chatId: selectedChat._id,
-        userId: session.user.id,
-        userName: session.user.name
-      });
-    }, 1000);
-  };
+      sendTypingIndicator(selectedChat._id, false)
+    }, 1000)
+  }, [selectedChat?._id, sendTypingIndicator])
 
   const handleSelectChat = (connection) => {
     if (selectedChat?._id !== connection._id) {
@@ -848,30 +765,27 @@ useEffect(() => {
 
               <div className={styles.inputWrapper}>
               <input
-  type="text"
-  placeholder="Type a message..."
-  value={newMessage}
-  onChange={(e) => {
-    setNewMessage(e.target.value);
-    handleTyping();
-  }}
-  className={styles.messageInput}
-  ref={messageInputRef}
-  aria-label="Message input"
-  onFocus={() => {
-    // Use the styles module class name
-    document.querySelector(`.${styles.chatPageContainer}`)?.classList.add(styles.inputFocused);
-    // Use the global class for mobile nav since it's in a different component
-    document.querySelector('.mobileNav')?.classList.add(styles.hidden);
-  }}
-  
-  onBlur={() => {
-    setTimeout(() => {
-      document.querySelector(`.${styles.chatPageContainer}`)?.classList.remove(styles.inputFocused);
-      document.querySelector('.mobileNav')?.classList.remove(styles.hidden);
-    }, 100);
-  }}
-/>
+      type="text"
+      placeholder="Type a message..."
+      value={newMessage}
+      onChange={(e) => {
+        setNewMessage(e.target.value)
+        handleTyping()
+      }}
+      className={styles.messageInput}
+      ref={messageInputRef}
+      aria-label="Message input"
+      onFocus={() => {
+        document.querySelector(`.${styles.chatPageContainer}`)?.classList.add(styles.inputFocused)
+        document.querySelector('.mobileNav')?.classList.add(styles.hidden)
+      }}
+      onBlur={() => {
+        setTimeout(() => {
+          document.querySelector(`.${styles.chatPageContainer}`)?.classList.remove(styles.inputFocused)
+          document.querySelector('.mobileNav')?.classList.remove(styles.hidden)
+        }, 100)
+      }}
+    />
     {showEmojiPicker && <EmojiPicker />}
   </div>
 
