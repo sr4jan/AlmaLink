@@ -102,40 +102,7 @@ export default function ChatPage() {
     loadMessages();
   }, [selectedChat?._id]);
 
-  useEffect(() => {
-    if (socket && session?.user?.id) {
-      // Announce user is online
-      socket.emit('user:online', session.user.id);
-      
-      // Handle incoming messages
-      socket.on('message:received', handleNewMessage);
-      socket.on('message:sent', handleNewMessage);
-      
-      // Handle typing indicators
-      socket.on('typing:started', ({ userId, userName }) => {
-        setTypingUsers(prev => {
-          const newSet = new Set([...prev]);
-          newSet.add(userName || userId);
-          return newSet;
-        });
-      });
-      
-      socket.on('typing:stopped', ({ userId, userName }) => {
-        setTypingUsers(prev => {
-          const newSet = new Set([...prev]);
-          newSet.delete(userName || userId);
-          return newSet;
-        });
-      });
-
-      return () => {
-        socket.off('message:received');
-        socket.off('message:sent');
-        socket.off('typing:started');
-        socket.off('typing:stopped');
-      };
-    }
-  }, [socket, session?.user?.id]);
+  
   // --- Effects ---
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -281,7 +248,47 @@ export default function ChatPage() {
       lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [selectedChat, lastMessageRef]); // Add lastMessageRef to dependencies
+ // In your ChatPage component
+useEffect(() => {
+  if (!socket || !session?.user?.id || !isConnected) return;
 
+  // Only set up listeners once connected
+  console.log('Setting up socket listeners for user:', session.user.id);
+  
+  // Announce user is online
+  socket.emit('user:online', session.user.id);
+  
+  // Handle incoming messages
+  socket.on('message:received', handleNewMessage);
+  socket.on('message:sent', handleNewMessage);
+  
+  // Handle typing indicators
+  socket.on('typing:started', ({ userId, userName }) => {
+    setTypingUsers(prev => {
+      const newSet = new Set([...prev]);
+      newSet.add(userName || userId);
+      return newSet;
+    });
+  });
+  
+  socket.on('typing:stopped', ({ userId, userName }) => {
+    setTypingUsers(prev => {
+      const newSet = new Set([...prev]);
+      newSet.delete(userName || userId);
+      return newSet;
+    });
+  });
+
+  return () => {
+    if (socket) {
+      console.log('Removing socket listeners');
+      socket.off('message:received');
+      socket.off('message:sent');
+      socket.off('typing:started');
+      socket.off('typing:stopped');
+    }
+  };
+}, [socket, session?.user?.id, isConnected, handleNewMessage]); // Added handleNewMessage to dependencies
   // --- Event Handlers ---
   const handleSendMessage = async (e) => {
     e?.preventDefault();

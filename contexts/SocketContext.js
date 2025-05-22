@@ -1,54 +1,55 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+"use client"
+
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 
 const SocketContext = createContext();
 
 export function SocketProvider({ children }) {
-  const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [lastError, setLastError] = useState(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
-    let socketInstance;
+    let mounted = true;
 
     const initSocket = async () => {
       try {
-        await fetch('/api/socketio');
-        
-        socketInstance = io(undefined, {
-          path: '/api/socketio',
-          addTrailingSlash: false,
-          reconnection: true,
-          reconnectionAttempts: Infinity,
-          reconnectionDelay: 1000,
-          reconnectionDelayMax: 5000,
-          timeout: 20000,
-          transports: ['websocket', 'polling']
-        });
+        if (!socketRef.current) {
+          // Initialize socket endpoint
+          await fetch('/api/socketio');
+          
+          if (!mounted) return;
 
-        socketInstance.on('connect', () => {
-          console.log('Socket connected:', socketInstance.id);
-          setIsConnected(true);
-          setLastError(null);
-        });
+          const socket = io(undefined, {
+            path: '/api/socketio',
+            addTrailingSlash: false,
+            reconnection: true,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 5000,
+            timeout: 20000,
+            transports: ['websocket']
+          });
 
-        socketInstance.on('disconnect', (reason) => {
-          console.log('Socket disconnected:', reason);
-          setIsConnected(false);
-        });
+          socket.on('connect', () => {
+            console.log('Socket connected');
+            setIsConnected(true);
+            setLastError(null);
+          });
 
-        socketInstance.on('connect_error', (error) => {
-          console.error('Connection error:', error);
-          setLastError(error.message);
-          setIsConnected(false);
-        });
+          socket.on('disconnect', (reason) => {
+            console.log('Socket disconnected:', reason);
+            setIsConnected(false);
+          });
 
-        socketInstance.on('error', (error) => {
-          console.error('Socket error:', error);
-          setLastError(error.message);
-        });
+          socket.on('connect_error', (error) => {
+            setLastError(error.message);
+            setIsConnected(false);
+          });
 
-        setSocket(socketInstance);
+          socketRef.current = socket;
+        }
       } catch (error) {
         console.error('Socket initialization error:', error);
         setLastError(error.message);
@@ -58,15 +59,19 @@ export function SocketProvider({ children }) {
     initSocket();
 
     return () => {
-      if (socketInstance) {
-        socketInstance.removeAllListeners();
-        socketInstance.close();
+      mounted = false;
+      if (socketRef.current) {
+        socketRef.current.removeAllListeners();
       }
     };
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected, lastError }}>
+    <SocketContext.Provider value={{
+      socket: socketRef.current,
+      isConnected,
+      lastError
+    }}>
       {children}
     </SocketContext.Provider>
   );

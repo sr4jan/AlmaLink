@@ -1,3 +1,4 @@
+// pages/api/socketio.js
 import { Server as SocketIOServer } from 'socket.io';
 
 export const config = {
@@ -6,74 +7,74 @@ export const config = {
   },
 };
 
+// Global variables for instance tracking
+let io = null;
+const activeUsers = new Map();
+
 const ioHandler = (req, res) => {
-  if (!res.socket.server.io) {
-    const io = new SocketIOServer(res.socket.server, {
+  // Only create a new socket server instance if it doesn't exist
+  if (!io) {
+    console.log('Initializing socket server for the first time');
+    
+    io = new SocketIOServer(req.socket.server, {
       path: '/api/socketio',
       addTrailingSlash: false,
+      pingTimeout: 60000,
+      pingInterval: 25000,
       cors: {
-        origin: '*',
+        origin: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
         methods: ['GET', 'POST'],
+        credentials: true
       },
-      transports: ['websocket', 'polling'],
+      transports: ['websocket'],
     });
 
-    // Store active users
-    const activeUsers = new Map();
-
     io.on('connection', (socket) => {
-      console.log('New client connected:', socket.id);
-
-      // Handle user coming online
+      // Don't log new connections
       socket.on('user:online', (userId) => {
         if (!userId) return;
         
-        // Store user's socket id
+        // Update user's socket ID
         activeUsers.set(userId, socket.id);
         socket.userId = userId;
-        
-        // Join user's personal room
         socket.join(`user:${userId}`);
-        console.log(`User ${userId} is online`);
-        
-        // Broadcast user's online status
-        socket.broadcast.emit('user:status', { userId, status: 'online' });
       });
 
-      // Handle real-time messaging
-      socket.on('message:send', (message) => {
-        const { sender, receiver, content } = message;
-        
-        // Emit to receiver's room immediately
-        io.to(`user:${receiver}`).emit('message:received', message);
-        
-        // Also emit to sender's other tabs/devices
-        socket.to(`user:${sender}`).emit('message:sent', message);
-        
-        console.log(`Message sent from ${sender} to ${receiver}`);
+      socket.on('message:send', (messageData) => {
+        if (!messageData?.receiver) return;
+        const receiverSocketId = activeUsers.get(messageData.receiver);
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit('message:receive', messageData);
+        }
       });
 
-      // Handle typing indicators
       socket.on('typing:start', ({ chatId, userId }) => {
+        if (!chatId || !userId) return;
         socket.to(`chat:${chatId}`).emit('typing:started', { userId });
       });
 
       socket.on('typing:stop', ({ chatId, userId }) => {
+        if (!chatId || !userId) return;
         socket.to(`chat:${chatId}`).emit('typing:stopped', { userId });
       });
 
-      // Handle disconnection
       socket.on('disconnect', () => {
         if (socket.userId) {
-          activeUsers.delete(socket.userId);
-          io.emit('user:status', { userId: socket.userId, status: 'offline' });
+          if (activeUsers.get(socket.userId) === socket.id) {
+            activeUsers.delete(socket.userId);
+            io.emit('user:status', { userId: socket.userId, status: 'offline' });
+          }
         }
-        console.log('Client disconnected:', socket.id);
       });
     });
 
-    res.socket.server.io = io;
+    // Store io instance on the server object
+    req.socket.server.io = io;
+  } else {
+    // Reuse existing io instance
+    req.socket.server.io = io;
   }
+
   res.end();
 };
 
